@@ -86,11 +86,28 @@ def to_markdown(df: pd.DataFrame, split: str) -> str:
             f"{r['f1_negative']:.4f} | {r['f1_neutral']:.4f} | "
             f"{r['f1_positive']:.4f} | {params} |"
         )
+    results = load_results()
+    bert_meta = results.get("DistilBERT (fine-tuned)", {}).get("meta", {})
+    bert_rows = bert_meta.get("train_rows")
+
     lines += [
         "",
-        f"Always predicting the majority class scores **0.7914 accuracy** but only "
-        f"**0.2945 macro-F1** - which is why macro-F1 is the headline metric.",
+        "Always predicting the majority class scores **0.7914 accuracy** but only "
+        "**0.2945 macro-F1** - which is why macro-F1 is the headline metric.",
+        "",
+        "**Training conditions.** All models are evaluated on the same full 30,000-row "
+        "validation and test splits, and all use the same class-weighted loss and "
+        "early stopping on validation macro-F1.",
     ]
+    if bert_rows:
+        lines.append(
+            f"DistilBERT is **not** trained on equal footing: it saw a stratified "
+            f"{bert_rows:,}-row subset of the 240,000-row training split "
+            f"(a quarter of the data) at `max_len` {bert_meta.get('max_len', 128)}, "
+            f"versus 230 for the recurrent models, to fit a 6 GB GPU in reasonable "
+            f"time. Its score is therefore a floor on what it could reach, not a "
+            f"ceiling - do not read this table as 'a Bi-GRU beats a transformer'."
+        )
     return "\n".join(lines)
 
 
@@ -139,8 +156,11 @@ def plot_per_class_f1(df: pd.DataFrame) -> plt.Figure:
     ax.set_xticks(x, df["model"], fontsize=9)
     ax.set_title("Per-class F1: every model struggles on neutral")
     ax.set_ylabel("F1")
-    ax.set_ylim(0, 1.0)
-    ax.legend(ncol=3, loc="upper left")
+    # Headroom so the legend never sits on top of the positive bars, which run
+    # to ~0.95 in every group.
+    ax.set_ylim(0, 1.18)
+    ax.set_yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
+    ax.legend(ncol=3, loc="upper left", bbox_to_anchor=(0, 1.0))
     fig.tight_layout()
     return fig
 
