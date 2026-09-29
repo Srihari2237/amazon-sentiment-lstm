@@ -203,7 +203,7 @@ def main() -> int:
             torch.save({"model_state": model.state_dict(),
                         "max_len": args.max_len,
                         "val_macro_f1": best_f1}, checkpoint_path)
-            print(f"         new best - checkpoint saved")
+            print("         new best - checkpoint saved")
 
     model.load_state_dict(torch.load(checkpoint_path)["model_state"])
     print(f"\nbest epoch {best_epoch} (val macro-F1 {best_f1:.4f})")

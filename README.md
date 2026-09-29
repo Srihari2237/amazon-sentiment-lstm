@@ -31,6 +31,35 @@ recurrent models, to fit a 6 GB laptop GPU in reasonable time. Its 0.7448 is a
 floor, not a ceiling - this table is not evidence that a Bi-GRU beats a
 transformer. Validation and test splits are full and identical for every model.
 
+### Optimised results (no retraining)
+
+Every model above over-predicts neutral - test recall exceeds precision by 0.22
+to 0.29 on that class. That is the class-weighted loss doing its job too
+enthusiastically, and `argmax` taking the inflated scores at face value. F1 is
+maximised when precision and recall are balanced, so rescaling the predicted
+probabilities per class recovers macro-F1 for free.
+
+The scaling vector is searched on the **validation split only**, then applied once
+to test (`python -m src.optimize`).
+
+| Model | Macro-F1 | + tuned | Δ | Neutral F1 | + tuned |
+|---|---|---|---|---|---|
+| TF-IDF + LogReg | 0.7196 | 0.7289 | +0.0094 | 0.4421 | 0.4465 |
+| LSTM | 0.7282 | 0.7396 | +0.0113 | 0.4457 | 0.4651 |
+| Bi-GRU | 0.7506 | 0.7510 | +0.0004 | 0.4874 | 0.4916 |
+| Bi-LSTM + Attention | 0.7435 | 0.7507 | +0.0072 | 0.4786 | 0.4850 |
+| DistilBERT | 0.7448 | 0.7531 | +0.0083 | 0.4712 | 0.4828 |
+| **Ensemble (all 5, averaged)** | 0.7575 | **0.7628** | +0.0053 | 0.4967 | **0.5062** |
+
+**Best result: 0.7628 macro-F1**, up from 0.7506 - and the ensemble is the first
+configuration to push neutral F1 past 0.50.
+
+Two things worth noting. The tuned weights always *raise* positive and *lower*
+neutral (e.g. DistilBERT: `[0.81, 0.57, 1.62]`), which is exactly the
+over-prediction diagnosis confirmed numerically. And the Bi-GRU gains almost
+nothing (+0.0004) because it was already the best-calibrated model - which is
+part of why it topped the untuned table.
+
 ### What the numbers actually say
 
 1. **The Bi-GRU wins, not the headline Bi-LSTM+attention model** (0.7506 vs

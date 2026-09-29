@@ -21,14 +21,13 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
-import torch
 from matplotlib.colors import LinearSegmentedColormap
 
 from src.data import load_splits
 from src.metrics import compute_metrics, plot_confusion_matrix
 from src.predict import SentimentPredictor
 from src.train import ReviewDataset, collate, evaluate
-from src.viz import INK_MUTED, INK_SECONDARY, save_figure, use_project_style
+from src.viz import INK_SECONDARY, save_figure, use_project_style
 from src.vocab import Vocabulary
 
 PROJECT_ROOT: Path = Path(__file__).resolve().parents[1]

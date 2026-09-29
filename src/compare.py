@@ -21,7 +21,6 @@ from src.viz import (
     CLASS_COLORS,
     CLASS_ORDER,
     INK_MUTED,
-    INK_SECONDARY,
     SEQ_BLUE,
     label_bars,
     save_figure,

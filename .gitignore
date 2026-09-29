@@ -45,3 +45,6 @@ Thumbs.db
 
 # ---- Trained model checkpoints ----
 models/
+
+# ---- Cached model probabilities (regenerable via src.optimize) ----
+results/probabilities/
