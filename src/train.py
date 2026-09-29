@@ -26,7 +26,6 @@ Usage
 from __future__ import annotations
 
 import argparse
-import json
 import time
 from dataclasses import dataclass, asdict
 from pathlib import Path
@@ -111,6 +110,8 @@ class TrainConfig:
     freeze_embeddings: bool = False
     use_glove: bool = True
     seed: int = SEED
+    # Optional suffix so a capacity experiment does not overwrite the base run.
+    tag: str = ""
 
 
 # --------------------------------------------------------------------------- #
@@ -140,7 +141,8 @@ def train_model(cfg: TrainConfig) -> dict:
     np.random.seed(cfg.seed)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    display = DISPLAY_NAMES[cfg.model]
+    display = DISPLAY_NAMES[cfg.model] + (f" ({cfg.tag})" if cfg.tag else "")
+    slug = cfg.model + (f"_{cfg.tag}" if cfg.tag else "")
     print(f"\n{'=' * 68}\nTraining {display} on {device}\n{'=' * 68}")
 
     train_df, val_df, test_df = load_splits()
@@ -194,8 +196,8 @@ def train_model(cfg: TrainConfig) -> dict:
     scaler = torch.amp.GradScaler("cuda", enabled=device.type == "cuda")
 
     MODELS_DIR.mkdir(parents=True, exist_ok=True)
-    checkpoint_path = MODELS_DIR / f"{cfg.model}.pt"
-    vocab.save(MODELS_DIR / f"{cfg.model}_vocab.json")
+    checkpoint_path = MODELS_DIR / f"{slug}.pt"
+    vocab.save(MODELS_DIR / f"{slug}_vocab.json")
 
     best_f1, best_epoch, epochs_without_gain = -1.0, -1, 0
     history: list[dict] = []
@@ -288,8 +290,14 @@ def main() -> int:
     parser.add_argument("--batch-size", type=int, default=TrainConfig.batch_size)
     parser.add_argument("--lr", type=float, default=TrainConfig.lr)
     parser.add_argument("--hidden-dim", type=int, default=TrainConfig.hidden_dim)
+    parser.add_argument("--num-layers", type=int, default=TrainConfig.num_layers)
+    parser.add_argument("--max-len", type=int, default=TrainConfig.max_len)
+    parser.add_argument("--dropout", type=float, default=TrainConfig.dropout)
     parser.add_argument("--no-glove", action="store_true",
                         help="random embeddings instead of pretrained GloVe")
+    parser.add_argument("--tag", default="",
+                        help="suffix for the checkpoint and result name, so an "
+                             "experiment does not overwrite the baseline run")
     args = parser.parse_args()
 
     cfg = TrainConfig(
@@ -298,7 +306,11 @@ def main() -> int:
         batch_size=args.batch_size,
         lr=args.lr,
         hidden_dim=args.hidden_dim,
+        num_layers=args.num_layers,
+        max_len=args.max_len,
+        dropout=args.dropout,
         use_glove=not args.no_glove,
+        tag=args.tag,
     )
     train_model(cfg)
     return 0

@@ -1,0 +1,86 @@
+[
+  {
+    "model": "TF-IDF + LogReg",
+    "macro_f1_argmax": 0.7195561263595547,
+    "macro_f1_tuned": 0.7289143099800276,
+    "delta": 0.009358183620472915,
+    "neutral_f1_argmax": 0.4421380384016606,
+    "neutral_f1_tuned": 0.446535500427716,
+    "weights": [
+      0.7078,
+      0.7078,
+      1.5845
+    ],
+    "val_macro_f1_tuned": 0.7324628443079283
+  },
+  {
+    "model": "LSTM",
+    "macro_f1_argmax": 0.7282497689309917,
+    "macro_f1_tuned": 0.7395718873653263,
+    "delta": 0.011322118434334616,
+    "neutral_f1_argmax": 0.4456958970233307,
+    "neutral_f1_tuned": 0.46509050609530844,
+    "weights": [
+      0.8175,
+      0.7286,
+      1.4538
+    ],
+    "val_macro_f1_tuned": 0.7369287165298711
+  },
+  {
+    "model": "Bi-GRU",
+    "macro_f1_argmax": 0.750563493826891,
+    "macro_f1_tuned": 0.751009243616695,
+    "delta": 0.00044574978980393976,
+    "neutral_f1_argmax": 0.48736462093862815,
+    "neutral_f1_tuned": 0.49156891495601174,
+    "weights": [
+      0.8488,
+      0.9523,
+      1.1989
+    ],
+    "val_macro_f1_tuned": 0.7506225145377102
+  },
+  {
+    "model": "Bi-LSTM + Attention",
+    "macro_f1_argmax": 0.7435073315559674,
+    "macro_f1_tuned": 0.7506971438770466,
+    "delta": 0.007189812321079181,
+    "neutral_f1_argmax": 0.47855004988360494,
+    "neutral_f1_tuned": 0.48498845265588914,
+    "weights": [
+      0.9355,
+      0.7431,
+      1.3214
+    ],
+    "val_macro_f1_tuned": 0.7544843315290434
+  },
+  {
+    "model": "DistilBERT (fine-tuned)",
+    "macro_f1_argmax": 0.7448206738690164,
+    "macro_f1_tuned": 0.7531089275799476,
+    "delta": 0.008288253710931226,
+    "neutral_f1_argmax": 0.4711969644705071,
+    "neutral_f1_tuned": 0.4828426395939086,
+    "weights": [
+      0.8101,
+      0.5735,
+      1.6164
+    ],
+    "val_macro_f1_tuned": 0.7572125722064958
+  },
+  {
+    "model": "Ensemble (5 models)",
+    "macro_f1_argmax": 0.7574812875288602,
+    "macro_f1_tuned": 0.762810362034278,
+    "delta": 0.005329074505417752,
+    "neutral_f1_argmax": 0.49666080843585236,
+    "neutral_f1_tuned": 0.506211755979974,
+    "weights": [
+      0.9205,
+      0.9205,
+      1.1589
+    ],
+    "val_macro_f1_tuned": 0.7641630482839723
+  }
+]

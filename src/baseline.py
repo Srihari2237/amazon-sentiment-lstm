@@ -16,12 +16,10 @@ Usage
 from __future__ import annotations
 
 import argparse
-import json
 import time
 from pathlib import Path
 
 import joblib
-import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
@@ -117,12 +115,12 @@ def main() -> int:
     record_result(MODEL_NAME, "test", test_metrics)
 
     fig = plot_confusion_matrix(test_metrics, f"{MODEL_NAME} - test confusion matrix")
-    from src.viz import save_figure, use_project_style
+    from src.viz import save_figure
     save_figure(fig, "05_baseline_confusion_matrix")
 
     MODELS_DIR.mkdir(parents=True, exist_ok=True)
     joblib.dump(best_model, MODELS_DIR / "baseline_tfidf_logreg.joblib")
-    print(f"saved model -> models/baseline_tfidf_logreg.joblib")
+    print("saved model -> models/baseline_tfidf_logreg.joblib")
 
     return 0
 
