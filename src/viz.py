@@ -77,7 +77,7 @@ def use_project_style() -> None:
             "ytick.major.size": 0,
             "font.size": 10,
             "axes.titlesize": 12,
-            "axes.titleweight": "semibold",
+            "axes.titleweight": "bold",
             "axes.titlelocation": "left",
             "axes.titlepad": 12,
             "legend.frameon": False,

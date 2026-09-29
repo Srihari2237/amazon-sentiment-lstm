@@ -42,3 +42,6 @@ Thumbs.db
 .env
 
 # NOTE: results/ IS tracked on purpose - metrics and plots are part of the portfolio.
+
+# ---- Trained model checkpoints ----
+models/
