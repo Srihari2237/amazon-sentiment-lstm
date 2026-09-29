@@ -48,3 +48,6 @@ models/
 
 # ---- Cached model probabilities (regenerable via src.optimize) ----
 results/probabilities/
+
+# ---- Node (only used to generate the report .docx) ----
+node_modules/

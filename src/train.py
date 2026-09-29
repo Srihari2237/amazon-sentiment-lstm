@@ -110,8 +110,72 @@ class TrainConfig:
     freeze_embeddings: bool = False
     use_glove: bool = True
     seed: int = SEED
+    # "ce" = plain cross-entropy; "ordinal" = distance-aware soft targets.
+    loss: str = "ce"
+    smoothing: float = 0.1
     # Optional suffix so a capacity experiment does not overwrite the base run.
     tag: str = ""
+
+
+# --------------------------------------------------------------------------- #
+# Loss
+# --------------------------------------------------------------------------- #
+
+
+class OrdinalCrossEntropy(nn.Module):
+    """Cross-entropy with distance-aware soft targets.
+
+    Sentiment here is *ordinal*: negative < neutral < positive. Plain
+    cross-entropy does not know that - calling a negative review "positive" and
+    calling it "neutral" are penalised identically, even though one is a far
+    worse mistake.
+
+    This spreads a small amount of target mass onto the other classes in inverse
+    proportion to their distance from the true class, so predicting an adjacent
+    class is cheaper than predicting the opposite pole. Class weights are applied
+    on top, exactly as in the plain-cross-entropy path.
+
+    For ``smoothing=0.1`` the targets are:
+
+        true negative -> [0.900, 0.067, 0.033]
+        true neutral  -> [0.050, 0.900, 0.050]
+        true positive -> [0.033, 0.067, 0.900]
+    """
+
+    def __init__(
+        self,
+        class_weights: torch.Tensor,
+        n_classes: int = 3,
+        smoothing: float = 0.1,
+    ) -> None:
+        super().__init__()
+        self.register_buffer("class_weights", class_weights)
+
+        # targets[c] is the soft target distribution for true class c.
+        targets = torch.zeros(n_classes, n_classes)
+        for c in range(n_classes):
+            distance = torch.abs(torch.arange(n_classes, dtype=torch.float) - c)
+            share = torch.where(distance > 0, 1.0 / distance, torch.zeros(1))
+            share = share / share.sum() * smoothing
+            share[c] = 1.0 - smoothing
+            targets[c] = share
+        self.register_buffer("targets", targets)
+
+    def forward(self, logits: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
+        log_probs = torch.log_softmax(logits.float(), dim=1)
+        soft = self.targets[target]                       # (B, C)
+        per_sample = -(soft * log_probs).sum(dim=1)       # (B,)
+        weights = self.class_weights[target]              # (B,)
+        return (per_sample * weights).sum() / weights.sum()
+
+
+def build_criterion(cfg: TrainConfig, class_weights: torch.Tensor) -> nn.Module:
+    """Select the loss function named in the config."""
+    if cfg.loss == "ordinal":
+        print(f"loss: ordinal cross-entropy (smoothing={cfg.smoothing})")
+        return OrdinalCrossEntropy(class_weights, smoothing=cfg.smoothing)
+    print("loss: cross-entropy")
+    return nn.CrossEntropyLoss(weight=class_weights)
 
 
 # --------------------------------------------------------------------------- #
@@ -187,9 +251,9 @@ def train_model(cfg: TrainConfig) -> dict:
                                    y=train_df["label"].values)
     print("class weights: " + ", ".join(
         f"{n}={w:.2f}" for n, w in zip(("negative", "neutral", "positive"), weights)))
-    criterion = nn.CrossEntropyLoss(
-        weight=torch.tensor(weights, dtype=torch.float32, device=device)
-    )
+    criterion = build_criterion(
+        cfg, torch.tensor(weights, dtype=torch.float32, device=device)
+    ).to(device)
 
     optimiser = torch.optim.AdamW(model.parameters(), lr=cfg.lr,
                                   weight_decay=cfg.weight_decay)
@@ -295,6 +359,11 @@ def main() -> int:
     parser.add_argument("--dropout", type=float, default=TrainConfig.dropout)
     parser.add_argument("--no-glove", action="store_true",
                         help="random embeddings instead of pretrained GloVe")
+    parser.add_argument("--loss", default="ce", choices=("ce", "ordinal"),
+                        help="'ordinal' uses distance-aware soft targets, so "
+                             "confusing adjacent classes costs less than "
+                             "confusing the two poles")
+    parser.add_argument("--smoothing", type=float, default=TrainConfig.smoothing)
     parser.add_argument("--tag", default="",
                         help="suffix for the checkpoint and result name, so an "
                              "experiment does not overwrite the baseline run")
@@ -310,6 +379,8 @@ def main() -> int:
         max_len=args.max_len,
         dropout=args.dropout,
         use_glove=not args.no_glove,
+        loss=args.loss,
+        smoothing=args.smoothing,
         tag=args.tag,
     )
     train_model(cfg)

@@ -98,14 +98,22 @@ def to_markdown(df: pd.DataFrame, split: str) -> str:
         "validation and test splits, and all use the same class-weighted loss and "
         "early stopping on validation macro-F1.",
     ]
-    if bert_rows:
+    full_train = 240_000
+    bert_len = bert_meta.get("max_len", 128)
+    if bert_rows and bert_rows < full_train:
+        # Only warn about an unequal comparison when it is actually unequal.
         lines.append(
             f"DistilBERT is **not** trained on equal footing: it saw a stratified "
-            f"{bert_rows:,}-row subset of the 240,000-row training split "
-            f"(a quarter of the data) at `max_len` {bert_meta.get('max_len', 128)}, "
-            f"versus 230 for the recurrent models, to fit a 6 GB GPU in reasonable "
-            f"time. Its score is therefore a floor on what it could reach, not a "
-            f"ceiling - do not read this table as 'a Bi-GRU beats a transformer'."
+            f"{bert_rows:,}-row subset of the {full_train:,}-row training split at "
+            f"`max_len` {bert_len}, versus 230 for the recurrent models, to fit a "
+            f"6 GB GPU in reasonable time. Its score is therefore a floor on what "
+            f"it could reach, not a ceiling."
+        )
+    elif bert_rows:
+        lines.append(
+            f"DistilBERT was fine-tuned on the full {bert_rows:,}-row training "
+            f"split at `max_len` {bert_len} (batch 16, fp16), so it is directly "
+            f"comparable with the recurrent models."
         )
     return "\n".join(lines)
 

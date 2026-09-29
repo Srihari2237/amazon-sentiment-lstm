@@ -17,30 +17,30 @@ All five models are evaluated on the **same** 30,000-review test split, scored o
 |---|---|---|---|---|---|---|
 | TF-IDF + LogReg *(baseline)* | 0.8697 | 0.7196 | 0.7753 | 0.4421 | 0.9412 | - |
 | LSTM | 0.8688 | 0.7282 | 0.7996 | 0.4457 | 0.9394 | 4.6M |
-| **Bi-GRU** | 0.8916 | **0.7506** | 0.8103 | **0.4874** | 0.9541 | 4.7M |
+| Bi-GRU | 0.8916 | 0.7506 | 0.8103 | 0.4874 | 0.9541 | 4.7M |
 | Bi-LSTM + Attention *(main)* | 0.8834 | 0.7435 | 0.8016 | 0.4786 | 0.9504 | 4.8M |
-| DistilBERT (fine-tuned) | 0.8858 | 0.7448 | 0.8122 | 0.4711 | 0.9510 | 67.0M |
+| **DistilBERT (fine-tuned)** | 0.9086 | **0.7661** | 0.8327 | **0.5022** | 0.9634 | 67.0M |
 | *always predict positive* | *0.7914* | *0.2945* | *0* | *0* | *0.8836* | *0* |
 
 ![macro-F1 by model](results/figures/06_model_comparison.png)
 ![per-class F1](results/figures/07_per_class_f1.png)
 
-**DistilBERT is not on equal footing.** It trained on a stratified 60,000-row
-subset (a quarter of the training data) at `max_len` 128 versus 230 for the
-recurrent models, to fit a 6 GB laptop GPU in reasonable time. Its 0.7448 is a
-floor, not a ceiling - this table is not evidence that a Bi-GRU beats a
-transformer. Validation and test splits are full and identical for every model.
+All five were trained on the full 240,000-row training split with the same
+class-weighted loss and the same early-stopping rule, so this is an equal-footing
+comparison. DistilBERT uses `max_len` 256 at batch 16; the recurrent models use
+`max_len` 230 at batch 128.
 
-### Optimised results (no retraining)
+### Optimised results
 
-Every model above over-predicts neutral - test recall exceeds precision by 0.22
-to 0.29 on that class. That is the class-weighted loss doing its job too
-enthusiastically, and `argmax` taking the inflated scores at face value. F1 is
-maximised when precision and recall are balanced, so rescaling the predicted
-probabilities per class recovers macro-F1 for free.
+Every model except the fully fine-tuned DistilBERT over-predicts neutral - test
+recall exceeds precision by 0.22 to 0.29 on that class. That is the
+class-weighted loss doing its job too enthusiastically, with `argmax` then taking
+the inflated scores at face value. F1 peaks when precision and recall are
+balanced, so rescaling the predicted probabilities per class recovers macro-F1
+without retraining.
 
-The scaling vector is searched on the **validation split only**, then applied once
-to test (`python -m src.optimize`).
+The scaling vector is searched on the **validation split only**, then applied
+once to test (`python -m src.optimize`).
 
 | Model | Macro-F1 | + tuned | Δ | Neutral F1 | + tuned |
 |---|---|---|---|---|---|
@@ -48,35 +48,58 @@ to test (`python -m src.optimize`).
 | LSTM | 0.7282 | 0.7396 | +0.0113 | 0.4457 | 0.4651 |
 | Bi-GRU | 0.7506 | 0.7510 | +0.0004 | 0.4874 | 0.4916 |
 | Bi-LSTM + Attention | 0.7435 | 0.7507 | +0.0072 | 0.4786 | 0.4850 |
-| DistilBERT | 0.7448 | 0.7531 | +0.0083 | 0.4712 | 0.4828 |
-| **Ensemble (all 5, averaged)** | 0.7575 | **0.7628** | +0.0053 | 0.4967 | **0.5062** |
+| DistilBERT | 0.7662 | 0.7662 | +0.0000 | 0.5025 | 0.5025 |
+| Ensemble (mean of 5) | 0.7643 | 0.7692 | +0.0049 | 0.5076 | 0.5206 |
+| **Ensemble (greedy weights)** | 0.7757 | **0.7759** | +0.0003 | 0.5251 | **0.5269** |
 
-**Best result: 0.7628 macro-F1**, up from 0.7506 - and the ensemble is the first
-configuration to push neutral F1 past 0.50.
+**Best result: 0.7759 macro-F1 with neutral F1 0.5269** - up from 0.7196 for the
+baseline, a gain of +0.056 overall.
 
-Two things worth noting. The tuned weights always *raise* positive and *lower*
-neutral (e.g. DistilBERT: `[0.81, 0.57, 1.62]`), which is exactly the
-over-prediction diagnosis confirmed numerically. And the Bi-GRU gains almost
-nothing (+0.0004) because it was already the best-calibrated model - which is
-part of why it topped the untuned table.
+The tuned vectors always *raise* positive and *lower* neutral, which is the
+over-prediction diagnosis confirmed numerically. The one model that gains nothing
+is DistilBERT, whose fitted weights come out at exactly `[1.00, 1.00, 1.00]`: the
+same architecture trained on a quarter of the data had needed a correction worth
++0.0083, so training to convergence on the full split is what produced a
+calibrated classifier.
+
+### Experiments that did not work
+
+Reported because a failed experiment is still evidence, and omitting them would
+misrepresent how the final configuration was reached.
+
+| Experiment | Baseline | Result | Δ |
+|---|---|---|---|
+| Bi-GRU, 2 layers / hidden 192 / max_len 320 | 0.7506 | 0.7510 | +0.0004 |
+| Bi-GRU, ordinal loss (smoothing 0.15) | 0.7506 | 0.7401 | −0.0105 |
+| Bi-LSTM + Attention, ordinal loss | 0.7435 | 0.7390 | −0.0045 |
+
+The capacity experiment raised *validation* macro-F1 to 0.7558 but moved test by
+0.0004 — 800k extra parameters fitted the validation split, not the task. The
+ordinal loss (distance-aware soft targets, so confusing the two poles costs more
+than confusing adjacent classes) is well motivated for an ordinal label, but it
+works against the class weighting, which is deliberately trying to sharpen the
+model's willingness to commit to the rare neutral class.
 
 ### What the numbers actually say
 
-1. **The Bi-GRU wins, not the headline Bi-LSTM+attention model** (0.7506 vs
-   0.7435). The gap is small and within the range I would expect to move across
-   seeds, but it is reported as measured rather than reordered to make the
-   intended main model look best.
-2. **Every recurrent model beats the bag-of-words baseline**, but by less than the
-   parameter counts suggest: 4.6M parameters buy +0.009 macro-F1 over TF-IDF for
-   the plain LSTM. Word presence carries most of the sentiment signal in product
-   reviews.
-3. **Neutral F1 never exceeds 0.49 for any model**, including the transformer.
-   That consistency across five very different architectures is the strongest
-   evidence that the limit is in the labels, not the models - see
+1. **The transformer wins, but not by much for its size.** DistilBERT leads at
+   0.7661 with 67M parameters against the Bi-GRU's 0.7506 with 4.7M — a gain of
+   0.0155 for roughly 14× the parameters.
+2. **Bidirectionality matters more than attention here.** LSTM 0.7282 → Bi-GRU
+   0.7506 is a bigger jump than anything attention added, and covers more than
+   half the distance from the plain LSTM to the transformer.
+3. **The Bi-GRU beats the nominated main model** (0.7506 vs 0.7435). Reported as
+   measured; a capacity experiment suggests the gap is within run-to-run variation.
+4. **Every learned model beats bag-of-words, by less than you'd expect.** The
+   plain LSTM buys +0.009 macro-F1 over TF-IDF for 4.6M parameters, because word
+   presence alone already carries most of the sentiment signal.
+5. **No model reached 0.53 neutral F1.** Across five very different families,
+   including a pretrained transformer, that consistency is the strongest evidence
+   the limit is in the labels rather than the models — see
    [the error analysis](results/error_analysis.md).
-4. **Bidirectionality matters more than attention here.** The jump from LSTM
-   (0.7282) to Bi-GRU (0.7506) is larger than anything attention added. Reading a
-   review backwards as well as forwards is worth more than learning where to look.
+6. **Calibration beat capacity.** Rescaling and ensembling added +0.010 over the
+   best single model, while doubling the depth and width of the best recurrent
+   architecture added nothing.
 
 ## Why accuracy is the wrong metric
 
@@ -217,6 +240,9 @@ training code. If inference cleaned text even slightly differently from training
 the model would silently lose accuracy with no error message.
 
 ## How it works
+
+![system block diagram](results/figures/00_block_diagram.png)
+
 
 ```
 raw review text
