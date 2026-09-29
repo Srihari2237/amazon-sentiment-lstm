@@ -9,7 +9,45 @@ The project's real subject is the **neutral class**. It is only 7.3% of the data
 it sits semantically between the other two, and every model here finds it hard.
 Accuracy hides that completely - so macro-F1 is the headline metric throughout.
 
-<!-- RESULTS_TABLE -->
+## Results
+
+All five models are evaluated on the **same** 30,000-review test split, scored once.
+
+| Model | Accuracy | **Macro-F1** | F1 negative | F1 neutral | F1 positive | Params |
+|---|---|---|---|---|---|---|
+| TF-IDF + LogReg *(baseline)* | 0.8697 | 0.7196 | 0.7753 | 0.4421 | 0.9412 | - |
+| LSTM | 0.8688 | 0.7282 | 0.7996 | 0.4457 | 0.9394 | 4.6M |
+| **Bi-GRU** | 0.8916 | **0.7506** | 0.8103 | **0.4874** | 0.9541 | 4.7M |
+| Bi-LSTM + Attention *(main)* | 0.8834 | 0.7435 | 0.8016 | 0.4786 | 0.9504 | 4.8M |
+| DistilBERT (fine-tuned) | 0.8858 | 0.7448 | 0.8122 | 0.4711 | 0.9510 | 67.0M |
+| *always predict positive* | *0.7914* | *0.2945* | *0* | *0* | *0.8836* | *0* |
+
+![macro-F1 by model](results/figures/06_model_comparison.png)
+![per-class F1](results/figures/07_per_class_f1.png)
+
+**DistilBERT is not on equal footing.** It trained on a stratified 60,000-row
+subset (a quarter of the training data) at `max_len` 128 versus 230 for the
+recurrent models, to fit a 6 GB laptop GPU in reasonable time. Its 0.7448 is a
+floor, not a ceiling - this table is not evidence that a Bi-GRU beats a
+transformer. Validation and test splits are full and identical for every model.
+
+### What the numbers actually say
+
+1. **The Bi-GRU wins, not the headline Bi-LSTM+attention model** (0.7506 vs
+   0.7435). The gap is small and within the range I would expect to move across
+   seeds, but it is reported as measured rather than reordered to make the
+   intended main model look best.
+2. **Every recurrent model beats the bag-of-words baseline**, but by less than the
+   parameter counts suggest: 4.6M parameters buy +0.009 macro-F1 over TF-IDF for
+   the plain LSTM. Word presence carries most of the sentiment signal in product
+   reviews.
+3. **Neutral F1 never exceeds 0.49 for any model**, including the transformer.
+   That consistency across five very different architectures is the strongest
+   evidence that the limit is in the labels, not the models - see
+   [the error analysis](results/error_analysis.md).
+4. **Bidirectionality matters more than attention here.** The jump from LSTM
+   (0.7282) to Bi-GRU (0.7506) is larger than anything attention added. Reading a
+   review backwards as well as forwards is worth more than learning where to look.
 
 ## Why accuracy is the wrong metric
 
@@ -25,13 +63,28 @@ An 0.79 accuracy sounds respectable and is worthless. Macro-F1 averages the thre
 classes equally, so the 7% neutral class counts as much as the 79% positive one,
 and a model cannot hide behind the majority.
 
-## Labels
+## Labels and data
 
 | Stars | Class | Code | Share of data |
 |---|---|---|---|
 | 1-2 | negative | 0 | 13.58% |
 | 3 | neutral | 1 | 7.28% |
 | 4-5 | positive | 2 | 79.14% |
+
+![class distribution](results/figures/01_class_distribution.png)
+
+Full exploratory analysis: [`notebooks/01_eda.ipynb`](notebooks/01_eda.ipynb).
+Two findings from it shaped everything downstream:
+
+![most distinctive words per class](results/figures/04_top_words_per_class.png)
+
+Negative reviews have strongly distinctive vocabulary (log-odds up to 3.4:
+*scam*, *garbage*, *worthless*) and so do positive ones (3.2: *lifesaver*,
+*godsend*). **Neutral peaks at only 1.9** - its markers are hedges like *meh*,
+*eh*, *alright*, *mediocre*. Neutral has no vocabulary of its own; it is
+expressed through contrast. That predicted, before any model was trained, both
+that neutral would be the hardest class and that an attention layer might help by
+finding the pivot word.
 
 ## Setup
 
