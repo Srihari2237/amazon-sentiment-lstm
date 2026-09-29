@@ -211,6 +211,51 @@ def apply_weights(probs: np.ndarray, weights: np.ndarray) -> np.ndarray:
     return (probs * weights).argmax(1)
 
 
+def greedy_ensemble(
+    val_probs: dict[str, np.ndarray],
+    y_val: np.ndarray,
+    n_rounds: int = 20,
+) -> dict[str, float]:
+    """Caruana-style greedy ensemble selection with replacement.
+
+    Averaging *all* models is rarely optimal - a weak member drags the blend
+    down. This repeatedly adds whichever model most improves validation macro-F1,
+    allowing the same model to be picked again, so the final mixing weights are
+    the selection counts. Models that never help simply get weight zero.
+
+    Selection happens on validation only.
+    """
+    from sklearn.metrics import f1_score
+
+    names = list(val_probs)
+    counts: dict[str, int] = {n: 0 for n in names}
+    running = np.zeros_like(next(iter(val_probs.values())))
+    chosen = 0
+
+    for _ in range(n_rounds):
+        best_name, best_score = None, -1.0
+        for name in names:
+            blended = (running + val_probs[name]) / (chosen + 1)
+            score = f1_score(y_val, blended.argmax(1), average="macro",
+                             zero_division=0)
+            if score > best_score:
+                best_name, best_score = name, score
+        running = running + val_probs[best_name]
+        counts[best_name] += 1
+        chosen += 1
+
+    return {n: c / n_rounds for n, c in counts.items() if c}
+
+
+def blend(probs: dict[str, np.ndarray], weights: dict[str, float]) -> np.ndarray:
+    """Weighted average of per-model probability matrices."""
+    total = sum(weights.values())
+    out = np.zeros_like(next(iter(probs.values())))
+    for name, w in weights.items():
+        out += probs[name] * w
+    return out / total
+
+
 # --------------------------------------------------------------------------- #
 # Main
 # --------------------------------------------------------------------------- #
@@ -253,18 +298,18 @@ def main() -> int:
                       extra={"class_weights": tuned_weights[name],
                              "tuned_on": "validation"})
 
-    # --- ensemble ------------------------------------------------------------ #
+    # --- ensembles ----------------------------------------------------------- #
     if not args.no_ensemble and len(all_probs) >= 2:
         names = list(all_probs)
+
+        # (a) plain average of everything - the naive baseline blend.
         ens_val = np.mean([all_probs[n]["val"] for n in names], axis=0)
         ens_test = np.mean([all_probs[n]["test"] for n in names], axis=0)
-
         base_test = compute_metrics(y_test, ens_test.argmax(1))
         weights, val_score = search_class_weights(ens_val, y_val)
         tuned_test = compute_metrics(y_test, apply_weights(ens_test, weights))
-
         summary.append({
-            "model": f"Ensemble ({len(names)} models)",
+            "model": f"Ensemble, mean ({len(names)})",
             "macro_f1_argmax": base_test["macro_f1"],
             "macro_f1_tuned": tuned_test["macro_f1"],
             "delta": tuned_test["macro_f1"] - base_test["macro_f1"],
@@ -273,9 +318,35 @@ def main() -> int:
             "weights": [round(float(w), 4) for w in weights],
             "val_macro_f1_tuned": val_score,
         })
-        print_report("Ensemble + tuned", "test", tuned_test)
-        record_result("Ensemble + tuned", "test", tuned_test,
+        record_result("Ensemble (mean) + tuned", "test", tuned_test,
                       extra={"members": names,
+                             "class_weights": [round(float(w), 4) for w in weights]})
+
+        # (b) greedily weighted blend, members and weights chosen on validation.
+        mix = greedy_ensemble({n: all_probs[n]["val"] for n in names}, y_val)
+        print("\ngreedy ensemble mixing weights (selected on validation):")
+        for n, w in sorted(mix.items(), key=lambda kv: -kv[1]):
+            print(f"    {n:<28} {w:.2f}")
+
+        g_val = blend({n: all_probs[n]["val"] for n in mix}, mix)
+        g_test = blend({n: all_probs[n]["test"] for n in mix}, mix)
+        base_test = compute_metrics(y_test, g_test.argmax(1))
+        weights, val_score = search_class_weights(g_val, y_val)
+        tuned_test = compute_metrics(y_test, apply_weights(g_test, weights))
+        summary.append({
+            "model": f"Ensemble, greedy ({len(mix)})",
+            "macro_f1_argmax": base_test["macro_f1"],
+            "macro_f1_tuned": tuned_test["macro_f1"],
+            "delta": tuned_test["macro_f1"] - base_test["macro_f1"],
+            "neutral_f1_argmax": base_test["per_class"]["neutral"]["f1"],
+            "neutral_f1_tuned": tuned_test["per_class"]["neutral"]["f1"],
+            "weights": [round(float(w), 4) for w in weights],
+            "val_macro_f1_tuned": val_score,
+            "mixing_weights": {k: round(v, 3) for k, v in mix.items()},
+        })
+        print_report("Ensemble (greedy) + tuned", "test", tuned_test)
+        record_result("Ensemble (greedy) + tuned", "test", tuned_test,
+                      extra={"mixing_weights": {k: round(v, 3) for k, v in mix.items()},
                              "class_weights": [round(float(w), 4) for w in weights]})
 
     # --- report -------------------------------------------------------------- #

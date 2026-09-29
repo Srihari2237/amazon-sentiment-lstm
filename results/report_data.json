@@ -1,0 +1,908 @@
+{
+  "comparison": [
+    {
+      "model": "TF-IDF + LogReg",
+      "accuracy": 0.8697,
+      "macro_f1": 0.7196,
+      "weighted_f1": 0.8823,
+      "per_class": {
+        "negative": {
+          "precision": 0.7468,
+          "recall": 0.8061,
+          "f1": 0.7753,
+          "support": 4075
+        },
+        "neutral": {
+          "precision": 0.3553,
+          "recall": 0.5852,
+          "f1": 0.4421,
+          "support": 2184
+        },
+        "positive": {
+          "precision": 0.9784,
+          "recall": 0.9068,
+          "f1": 0.9412,
+          "support": 23741
+        }
+      },
+      "confusion_matrix": [
+        [
+          3285,
+          660,
+          130
+        ],
+        [
+          560,
+          1278,
+          346
+        ],
+        [
+          554,
+          1659,
+          21528
+        ]
+      ],
+      "parameters": null
+    },
+    {
+      "model": "LSTM",
+      "accuracy": 0.8688,
+      "macro_f1": 0.7282,
+      "weighted_f1": 0.8845,
+      "per_class": {
+        "negative": {
+          "precision": 0.7783,
+          "recall": 0.8221,
+          "f1": 0.7996,
+          "support": 4075
+        },
+        "neutral": {
+          "precision": 0.3436,
+          "recall": 0.6342,
+          "f1": 0.4457,
+          "support": 2184
+        },
+        "positive": {
+          "precision": 0.9844,
+          "recall": 0.8984,
+          "f1": 0.9394,
+          "support": 23741
+        }
+      },
+      "confusion_matrix": [
+        [
+          3350,
+          643,
+          82
+        ],
+        [
+          544,
+          1385,
+          255
+        ],
+        [
+          410,
+          2003,
+          21328
+        ]
+      ],
+      "parameters": 4599447
+    },
+    {
+      "model": "Bi-GRU",
+      "accuracy": 0.8916,
+      "macro_f1": 0.7506,
+      "weighted_f1": 0.9006,
+      "per_class": {
+        "negative": {
+          "precision": 0.8185,
+          "recall": 0.8022,
+          "f1": 0.8103,
+          "support": 4075
+        },
+        "neutral": {
+          "precision": 0.4023,
+          "recall": 0.6181,
+          "f1": 0.4874,
+          "support": 2184
+        },
+        "positive": {
+          "precision": 0.977,
+          "recall": 0.9321,
+          "f1": 0.9541,
+          "support": 23741
+        }
+      },
+      "confusion_matrix": [
+        [
+          3269,
+          666,
+          140
+        ],
+        [
+          454,
+          1350,
+          380
+        ],
+        [
+          271,
+          1340,
+          22130
+        ]
+      ],
+      "parameters": 4658711
+    },
+    {
+      "model": "Bi-LSTM + Attention",
+      "accuracy": 0.8834,
+      "macro_f1": 0.7435,
+      "weighted_f1": 0.8958,
+      "per_class": {
+        "negative": {
+          "precision": 0.8226,
+          "recall": 0.7816,
+          "f1": 0.8016,
+          "support": 4075
+        },
+        "neutral": {
+          "precision": 0.3757,
+          "recall": 0.6589,
+          "f1": 0.4786,
+          "support": 2184
+        },
+        "positive": {
+          "precision": 0.9812,
+          "recall": 0.9215,
+          "f1": 0.9504,
+          "support": 23741
+        }
+      },
+      "confusion_matrix": [
+        [
+          3185,
+          785,
+          105
+        ],
+        [
+          430,
+          1439,
+          315
+        ],
+        [
+          257,
+          1606,
+          21878
+        ]
+      ],
+      "parameters": 4750615
+    },
+    {
+      "model": "DistilBERT (fine-tuned)",
+      "accuracy": 0.9086,
+      "macro_f1": 0.7661,
+      "weighted_f1": 0.9121,
+      "per_class": {
+        "negative": {
+          "precision": 0.801,
+          "recall": 0.867,
+          "f1": 0.8327,
+          "support": 4075
+        },
+        "neutral": {
+          "precision": 0.4671,
+          "recall": 0.543,
+          "f1": 0.5022,
+          "support": 2184
+        },
+        "positive": {
+          "precision": 0.9778,
+          "recall": 0.9494,
+          "f1": 0.9634,
+          "support": 23741
+        }
+      },
+      "confusion_matrix": [
+        [
+          3533,
+          438,
+          104
+        ],
+        [
+          591,
+          1186,
+          407
+        ],
+        [
+          287,
+          915,
+          22539
+        ]
+      ],
+      "parameters": 66955779
+    }
+  ],
+  "experiments": [
+    {
+      "model": "Bi-GRU (v2)",
+      "accuracy": 0.8872,
+      "macro_f1": 0.751,
+      "weighted_f1": 0.8993,
+      "per_class": {
+        "negative": {
+          "precision": 0.8306,
+          "recall": 0.7799,
+          "f1": 0.8045,
+          "support": 4075
+        },
+        "neutral": {
+          "precision": 0.3883,
+          "recall": 0.6854,
+          "f1": 0.4958,
+          "support": 2184
+        },
+        "positive": {
+          "precision": 0.9831,
+          "recall": 0.9242,
+          "f1": 0.9528,
+          "support": 23741
+        }
+      },
+      "confusion_matrix": [
+        [
+          3178,
+          806,
+          91
+        ],
+        [
+          401,
+          1497,
+          286
+        ],
+        [
+          247,
+          1552,
+          21942
+        ]
+      ],
+      "parameters": 5486999,
+      "note": "2 layers, hidden 192, max_len 320 - capacity experiment",
+      "baseline": "Bi-GRU",
+      "baseline_macro_f1": 0.7506,
+      "delta": 0.0004
+    },
+    {
+      "model": "Bi-GRU (ord)",
+      "accuracy": 0.879,
+      "macro_f1": 0.7401,
+      "weighted_f1": 0.8928,
+      "per_class": {
+        "negative": {
+          "precision": 0.8248,
+          "recall": 0.7764,
+          "f1": 0.7999,
+          "support": 4075
+        },
+        "neutral": {
+          "precision": 0.366,
+          "recall": 0.6694,
+          "f1": 0.4732,
+          "support": 2184
+        },
+        "positive": {
+          "precision": 0.9809,
+          "recall": 0.9159,
+          "f1": 0.9473,
+          "support": 23741
+        }
+      },
+      "confusion_matrix": [
+        [
+          3164,
+          795,
+          116
+        ],
+        [
+          414,
+          1462,
+          308
+        ],
+        [
+          258,
+          1738,
+          21745
+        ]
+      ],
+      "parameters": 4658711,
+      "note": "ordinal (distance-aware) loss, smoothing 0.15",
+      "baseline": "Bi-GRU",
+      "baseline_macro_f1": 0.7506,
+      "delta": -0.0105
+    },
+    {
+      "model": "Bi-LSTM + Attention (ord)",
+      "accuracy": 0.8782,
+      "macro_f1": 0.739,
+      "weighted_f1": 0.8921,
+      "per_class": {
+        "negative": {
+          "precision": 0.814,
+          "recall": 0.7902,
+          "f1": 0.8019,
+          "support": 4075
+        },
+        "neutral": {
+          "precision": 0.3631,
+          "recall": 0.6603,
+          "f1": 0.4686,
+          "support": 2184
+        },
+        "positive": {
+          "precision": 0.9823,
+          "recall": 0.9133,
+          "f1": 0.9466,
+          "support": 23741
+        }
+      },
+      "confusion_matrix": [
+        [
+          3220,
+          766,
+          89
+        ],
+        [
+          441,
+          1442,
+          301
+        ],
+        [
+          295,
+          1763,
+          21683
+        ]
+      ],
+      "parameters": 4750615,
+      "note": "ordinal (distance-aware) loss, smoothing 0.15",
+      "baseline": "Bi-LSTM + Attention",
+      "baseline_macro_f1": 0.7435,
+      "delta": -0.0045
+    }
+  ],
+  "optimisation": [
+    {
+      "model": "TF-IDF + LogReg",
+      "macro_f1_argmax": 0.7195561263595547,
+      "macro_f1_tuned": 0.7289143099800276,
+      "delta": 0.009358183620472915,
+      "neutral_f1_argmax": 0.4421380384016606,
+      "neutral_f1_tuned": 0.446535500427716,
+      "weights": [
+        0.7078,
+        0.7078,
+        1.5845
+      ],
+      "val_macro_f1_tuned": 0.7324628443079283
+    },
+    {
+      "model": "LSTM",
+      "macro_f1_argmax": 0.7282497689309917,
+      "macro_f1_tuned": 0.7395718873653263,
+      "delta": 0.011322118434334616,
+      "neutral_f1_argmax": 0.4456958970233307,
+      "neutral_f1_tuned": 0.46509050609530844,
+      "weights": [
+        0.8175,
+        0.7286,
+        1.4538
+      ],
+      "val_macro_f1_tuned": 0.7369287165298711
+    },
+    {
+      "model": "Bi-GRU",
+      "macro_f1_argmax": 0.750563493826891,
+      "macro_f1_tuned": 0.751009243616695,
+      "delta": 0.00044574978980393976,
+      "neutral_f1_argmax": 0.48736462093862815,
+      "neutral_f1_tuned": 0.49156891495601174,
+      "weights": [
+        0.8488,
+        0.9523,
+        1.1989
+      ],
+      "val_macro_f1_tuned": 0.7506225145377102
+    },
+    {
+      "model": "Bi-LSTM + Attention",
+      "macro_f1_argmax": 0.7435073315559674,
+      "macro_f1_tuned": 0.7506971438770466,
+      "delta": 0.007189812321079181,
+      "neutral_f1_argmax": 0.47855004988360494,
+      "neutral_f1_tuned": 0.48498845265588914,
+      "weights": [
+        0.9355,
+        0.7431,
+        1.3214
+      ],
+      "val_macro_f1_tuned": 0.7544843315290434
+    },
+    {
+      "model": "DistilBERT (fine-tuned)",
+      "macro_f1_argmax": 0.7662314387965038,
+      "macro_f1_tuned": 0.7662314387965038,
+      "delta": 0.0,
+      "neutral_f1_argmax": 0.5025402201524132,
+      "neutral_f1_tuned": 0.5025402201524132,
+      "weights": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "val_macro_f1_tuned": 0.7755414080992059
+    },
+    {
+      "model": "Ensemble, mean (5)",
+      "macro_f1_argmax": 0.7643170587792129,
+      "macro_f1_tuned": 0.7692105789386637,
+      "delta": 0.0048935201594508815,
+      "neutral_f1_argmax": 0.5075573801082292,
+      "neutral_f1_tuned": 0.5206301575393848,
+      "weights": [
+        0.7805,
+        0.9826,
+        1.237
+      ],
+      "val_macro_f1_tuned": 0.7704584339036783
+    },
+    {
+      "model": "Ensemble, greedy (5)",
+      "macro_f1_argmax": 0.7756832031395403,
+      "macro_f1_tuned": 0.7759477010257964,
+      "delta": 0.0002644978862560432,
+      "neutral_f1_argmax": 0.5250557922499492,
+      "neutral_f1_tuned": 0.526924611088951,
+      "weights": [
+        0.9248,
+        1.0376,
+        1.0376
+      ],
+      "val_macro_f1_tuned": 0.7790392402650376,
+      "mixing_weights": {
+        "TF-IDF + LogReg": 0.2,
+        "LSTM": 0.05,
+        "Bi-GRU": 0.15,
+        "Bi-LSTM + Attention": 0.15,
+        "DistilBERT (fine-tuned)": 0.45
+      }
+    }
+  ],
+  "distribution": {
+    "dataset": "McAuley-Lab/Amazon-Reviews-2023 / Electronics",
+    "n_rows_requested": 300000,
+    "seed": 42,
+    "label_scheme": {
+      "negative": "1-2 stars",
+      "neutral": "3 stars",
+      "positive": "4-5 stars"
+    },
+    "distribution": {
+      "full sample": {
+        "negative": {
+          "count": 40748,
+          "percent": 13.58
+        },
+        "neutral": {
+          "count": 21841,
+          "percent": 7.28
+        },
+        "positive": {
+          "count": 237411,
+          "percent": 79.14
+        }
+      },
+      "train": {
+        "negative": {
+          "count": 32598,
+          "percent": 13.58
+        },
+        "neutral": {
+          "count": 17473,
+          "percent": 7.28
+        },
+        "positive": {
+          "count": 189929,
+          "percent": 79.14
+        }
+      },
+      "val": {
+        "negative": {
+          "count": 4075,
+          "percent": 13.58
+        },
+        "neutral": {
+          "count": 2184,
+          "percent": 7.28
+        },
+        "positive": {
+          "count": 23741,
+          "percent": 79.14
+        }
+      },
+      "test": {
+        "negative": {
+          "count": 4075,
+          "percent": 13.58
+        },
+        "neutral": {
+          "count": 2184,
+          "percent": 7.28
+        },
+        "positive": {
+          "count": 23741,
+          "percent": 79.14
+        }
+      }
+    }
+  },
+  "misclassified_neutrals": [
+    {
+      "rating": 3,
+      "true": "neutral",
+      "predicted": "positive",
+      "confidence": 0.999301552772522,
+      "p_negative": 0.00015589564281981438,
+      "p_neutral": 0.0005425374838523567,
+      "p_positive": 0.999301552772522,
+      "text": "Wow. this is very impressive much bigger than I had imagined, (could house a family of hobbits) the styling is awesome and highly recommend this for anyone who must have they're tower exposed."
+    },
+    {
+      "rating": 3,
+      "true": "neutral",
+      "predicted": "positive",
+      "confidence": 0.9990872144699097,
+      "p_negative": 0.0003364682197570801,
+      "p_neutral": 0.0005762776709161699,
+      "p_positive": 0.9990872144699097,
+      "text": "Four Stars. Great case, would've made 5 stars if it had better cablemangament room, and better airflow"
+    },
+    {
+      "rating": 3,
+      "true": "neutral",
+      "predicted": "positive",
+      "confidence": 0.9979202151298523,
+      "p_negative": 0.0002576777769718319,
+      "p_neutral": 0.0018221356440335512,
+      "p_positive": 0.9979202151298523,
+      "text": "Happy with my purchase. Super cute and comfortable"
+    },
+    {
+      "rating": 3,
+      "true": "neutral",
+      "predicted": "positive",
+      "confidence": 0.9972457885742188,
+      "p_negative": 0.00018011794600170106,
+      "p_neutral": 0.0025741634890437126,
+      "p_positive": 0.9972457885742188,
+      "text": "great quality for the cost!!. anything u need for a beginner"
+    },
+    {
+      "rating": 3,
+      "true": "neutral",
+      "predicted": "positive",
+      "confidence": 0.9972334504127502,
+      "p_negative": 0.00011720353359123692,
+      "p_neutral": 0.0026493670884519815,
+      "p_positive": 0.9972334504127502,
+      "text": "The Best Bluetooth. I've tried a handful of bluetooth headsets from motorola. It works well and people seem to hear our conversations clearly with the Treo 750. Sound quality is good, it auto adjusts earpiece volume based on surrounding, so I am always able to hear the callers. And they always seem to be able to hear me pretty well"
+    },
+    {
+      "rating": 3,
+      "true": "neutral",
+      "predicted": "positive",
+      "confidence": 0.9969371557235718,
+      "p_negative": 3.886520062224008e-05,
+      "p_neutral": 0.003024035133421421,
+      "p_positive": 0.9969371557235718,
+      "text": "Works great with the N64. Bought to use with a N64 and Wii since the projector we bought only has HDMI inputs. Works great with the N64, color is whitewashed on the wii"
+    },
+    {
+      "rating": 3,
+      "true": "neutral",
+      "predicted": "positive",
+      "confidence": 0.9965413212776184,
+      "p_negative": 0.0005565803730860353,
+      "p_neutral": 0.002902067732065916,
+      "p_positive": 0.9965413212776184,
+      "text": "Works great Gift !!. Was a Gift !!!"
+    },
+    {
+      "rating": 3,
+      "true": "neutral",
+      "predicted": "positive",
+      "confidence": 0.9956992864608765,
+      "p_negative": 0.0001553336769575253,
+      "p_neutral": 0.004145402926951647,
+      "p_positive": 0.9956992864608765,
+      "text": "Works well for the money. I am easily pleased. It works. I'm happy."
+    },
+    {
+      "rating": 3,
+      "true": "neutral",
+      "predicted": "positive",
+      "confidence": 0.9953787326812744,
+      "p_negative": 0.00033521928708069026,
+      "p_neutral": 0.00428606616333127,
+      "p_positive": 0.9953787326812744,
+      "text": "Great item as advertised. Great item as advertised"
+    },
+    {
+      "rating": 3,
+      "true": "neutral",
+      "predicted": "positive",
+      "confidence": 0.9943757057189941,
+      "p_negative": 0.0004316792474128306,
+      "p_neutral": 0.005192588549107313,
+      "p_positive": 0.9943757057189941,
+      "text": "I love it. I love it"
+    },
+    {
+      "rating": 3,
+      "true": "neutral",
+      "predicted": "positive",
+      "confidence": 0.993712842464447,
+      "p_negative": 0.0003392650396563113,
+      "p_neutral": 0.0059479111805558205,
+      "p_positive": 0.993712842464447,
+      "text": "Versatile card reader. Nice multi card reader at a good price. It seems a little flimsy though"
+    },
+    {
+      "rating": 3,
+      "true": "neutral",
+      "predicted": "positive",
+      "confidence": 0.9913149476051331,
+      "p_negative": 0.001986037939786911,
+      "p_neutral": 0.006699024233967066,
+      "p_positive": 0.9913149476051331,
+      "text": "Fast claims. Fast claims"
+    },
+    {
+      "rating": 3,
+      "true": "neutral",
+      "predicted": "positive",
+      "confidence": 0.9909015893936157,
+      "p_negative": 0.0012545038480311632,
+      "p_neutral": 0.007843993604183197,
+      "p_positive": 0.9909015893936157,
+      "text": "My son loves me again!. Great product! My older son busted my younger son's screen and the world nearly came to an end. Daddy is now the hero who brought the iPad back to life. Looks exactly the same as the original but with out all the sticky finger prints. After looking at a few helpful YouTube videos, the repair was pretty straight forward and surprisingly easy. 6/18/16 Update - a few weeks ago my son's iPad developed an odd symptom. It appears to be haunted, what happens is the thing will randomly open apps and launch things in the apps. When he plays MineCraft, the iPad builds and destroys things in an area he didn't select...which naturally drives him nuts. The iPad doesn't do it all the time but enough to be a real issue. I have reached out to MMOBIEL and their suggestion was to heat the digitizer up and reset the pins in the connector and if I wasn't comfortable doing that to take it a professional....well, I haven't done it yet and while I have no plans to pay a professional, I am worried the screen will shatter and that the adhesive won't seal correctly after. Maybe they are right, maybe the connection is not set properly but I would think the symptoms would be more consistent if that was the case. I plan to try it soon, guess we shall see."
+    },
+    {
+      "rating": 3,
+      "true": "neutral",
+      "predicted": "positive",
+      "confidence": 0.9896944761276245,
+      "p_negative": 0.00022377035929821432,
+      "p_neutral": 0.010081744752824306,
+      "p_positive": 0.9896944761276245,
+      "text": "Good price. Love it. Great product. Good price. Doesn't have all the bells and whistles fitbit does."
+    },
+    {
+      "rating": 3,
+      "true": "neutral",
+      "predicted": "positive",
+      "confidence": 0.9888852834701538,
+      "p_negative": 0.00041771624819375575,
+      "p_neutral": 0.010697039775550365,
+      "p_positive": 0.9888852834701538,
+      "text": "Best price and prime. As expected"
+    },
+    {
+      "rating": 3,
+      "true": "neutral",
+      "predicted": "positive",
+      "confidence": 0.9886727929115295,
+      "p_negative": 0.0005037537193857133,
+      "p_neutral": 0.010823449119925499,
+      "p_positive": 0.9886727929115295,
+      "text": "Great sound. We have about half a dozen headphones in our house. In general, I find a lot of headphones are comparable lately. They all tend to come with a carrying case of some sort now (this one has a drawstring case). They all tend to have a mic now (this one does in one of the cords it comes with -- so it's at least compatible with most if not all phones you're likely to have). They all do something to stand out using unique colors or shapes (this one has a somewhat triangular shape and skins are available). Which leaves where they must stand out -- sound and fit. Sound wise, these are the best in our house. I won't bother listing all of the others we have but they're all in the $100-200 range I believe. For the most part they have all sounded alike. Not being a super audiophile, I have not minded that they all tend to sound the same. These though do sound crisper. The hubby put them on to play one of his online games (a lot going on with chats and action here and there) and immediately announced that they changed the gameplay for him. So sound, these are a winner in that department. They're also great a blocking sound. Fit? This one is tougher. I am quite picky having a lot of ear troubles and headaches. They fit me fine but don't seem as comfy for extended use. As I said though, I am picky with plenty of issues that headphones add to, so that one aspect of them was more like a 3-4 while retaining an overall 5. *UPDATE* April 20, 2014 - The cover over the foam on the ears has started to pull away. They're only used a few hours a week, so this probably shouldn't happen within 2 months. They're still our faves but now we're worried about long they'll hold up. *UPDATE* August 23, 2014 - While we still love these headphones, the band cracked while other older headphones we've used more have held up just fine. So without the breaks easy factor my review was 5 stars, now it's more like 3 as they just don't hold up to normal use for very long."
+    },
+    {
+      "rating": 3,
+      "true": "neutral",
+      "predicted": "positive",
+      "confidence": 0.9873379468917847,
+      "p_negative": 0.0011448193108662963,
+      "p_neutral": 0.011517188511788845,
+      "p_positive": 0.9873379468917847,
+      "text": "Classic CD player. My daughter\u2019s dance teacher loves a CD player. Often times during class she\u2019s been using her old CD player but recently it stopped working and decided ordered her the CD player and was pleasantly surprised on how she was able to navigate it well without any assistance, the sound quality isn\u2019t as high tech as we have now, but she steals and you is it, nevertheless."
+    },
+    {
+      "rating": 3,
+      "true": "neutral",
+      "predicted": "positive",
+      "confidence": 0.9865641593933105,
+      "p_negative": 0.0009651622385717928,
+      "p_neutral": 0.012470660731196404,
+      "p_positive": 0.9865641593933105,
+      "text": "Working well so far. These headphones are work well so far I have no issues."
+    },
+    {
+      "rating": 3,
+      "true": "neutral",
+      "predicted": "positive",
+      "confidence": 0.9861534833908081,
+      "p_negative": 0.0008464239654131234,
+      "p_neutral": 0.013000067323446274,
+      "p_positive": 0.9861534833908081,
+      "text": "Worth the cost.. Great speeds."
+    },
+    {
+      "rating": 3,
+      "true": "neutral",
+      "predicted": "positive",
+      "confidence": 0.9861159324645996,
+      "p_negative": 0.0004029428819194436,
+      "p_neutral": 0.01348116435110569,
+      "p_positive": 0.9861159324645996,
+      "text": "Great intro to BT headphones. These were great starter headphones, but they'll leave you wanting better quality. If you're hard on electronics or just don't expect them to last, then these are perfectly inexpensive."
+    }
+  ],
+  "code": [
+    {
+      "title": "4.1 DATA PIPELINE - STREAMING, LABELLING AND SPLITTING",
+      "file": "src/data.py",
+      "source": "def normalise_text(title: str | None, body: str | None) -> str:\n    \"\"\"Join the review title and body into one lightly-normalised string.\n\n    The title is included because on Amazon it often carries the sharpest\n    sentiment (\"Waste of money\", \"Works perfectly\"). Casing and punctuation are\n    preserved here - this is the variant a transformer such as DistilBERT wants,\n    since its tokenizer was trained on natural text.\n    \"\"\"\n    parts = [p.strip() for p in (title or \"\", body or \"\") if p and p.strip()]\n    text = \". \".join(parts)\n\n    text = html.unescape(text)      # \"&amp;\" -> \"&\"\n    text = _TAG_RE.sub(\" \", text)   # strip leftover HTML markup\n    text = _URL_RE.sub(\" \", text)   # links are noise for sentiment\n    text = _WS_RE.sub(\" \", text)    # collapse newlines / runs of spaces\n    return text.strip()\n\ndef clean_for_neural(text: str) -> str:\n    \"\"\"Aggressively normalise text for the count-based and GloVe-based models.\n\n    TF-IDF and a GloVe vocabulary have no sub-word fallback: every unseen\n    surface form is simply an out-of-vocabulary token. Lowercasing, collapsing\n    character runs and dropping exotic symbols keeps the vocabulary small and\n    maps more tokens onto real GloVe vectors. Basic punctuation is kept because\n    \"!\" and \"?\" are genuinely predictive of sentiment.\n    \"\"\"\n    text = text.lower()\n    text = _REPEAT_RE.sub(r\"\\1\\1\", text)\n    text = _KEEP_RE.sub(\" \", text)\n    text = _WS_RE.sub(\" \", text)\n    return text.strip()\n\ndef rating_to_label(rating: object) -> int | None:\n    \"\"\"Map a star rating to a sentiment class, or ``None`` if unusable.\n\n    Ratings arrive as floats (``5.0``), so they are rounded to the nearest int\n    and anything outside 1-5 is rejected rather than silently bucketed.\n    \"\"\"\n    try:\n        stars = int(round(float(rating)))  # type: ignore[arg-type]\n    except (TypeError, ValueError):\n        return None\n\n    if stars in (1, 2):\n        return NEGATIVE\n    if stars == 3:\n        return NEUTRAL\n    if stars in (4, 5):\n        return POSITIVE\n    return None\n\ndef stream_reviews(\n    n_rows: int = N_ROWS,\n    seed: int = SEED,\n    shuffle_buffer: int = SHUFFLE_BUFFER,\n) -> pd.DataFrame:\n    \"\"\"Stream, filter and clean reviews until ``n_rows`` usable rows are found.\n\n    Rows are dropped when the rating is unusable, the cleaned text is too short,\n    or the review is an exact duplicate of one already kept. Duplicates matter:\n    Amazon contains copy-pasted and templated reviews, and if the same text\n    landed in both train and test every reported score would be inflated.\n    \"\"\"\n    # The shuffle buffer must fill before the first row is yielded, so warn the\n    # user rather than leaving them staring at an idle progress bar.\n    print(\n        f\"Streaming Electronics reviews from the Hugging Face Hub \"\n        f\"(filling a {shuffle_buffer:,}-row shuffle buffer first)...\"\n    )\n\n    stream = _open_stream(seed=seed, shuffle_buffer=shuffle_buffer)\n\n    rows: list[dict] = []\n    seen: set[bytes] = set()\n    scanned = 0\n    dropped = {\"rating\": 0, \"empty\": 0, \"duplicate\": 0}\n\n    with tqdm(total=n_rows, unit=\"review\", desc=\"collecting\") as bar:\n        for record in stream:\n            scanned += 1\n\n            label = rating_to_label(record.get(\"rating\"))\n            if label is None:\n                dropped[\"rating\"] += 1\n                continue\n\n            text = normalise_text(record.get(\"title\"), record.get(\"text\"))\n            text_clean = clean_for_neural(text)\n            if len(text_clean) < MIN_CHARS:\n                dropped[\"empty\"] += 1\n                continue\n\n            key = _fingerprint(text_clean)\n            if key in seen:\n                dropped[\"duplicate\"] += 1\n                continue\n            seen.add(key)\n\n            rows.append(\n                {\n                    \"text\": text,                  # for DistilBERT\n                    \"text_clean\": text_clean,      # for TF-IDF / LSTM / GRU\n                    \"rating\": int(round(float(record[\"rating\"]))),\n                    \"label\": label,\n                    \"label_name\": LABEL_NAMES[label],\n                }\n            )\n            bar.update(1)\n\n            if len(rows) >= n_rows:\n                break\n\n    print(\n        f\"Scanned {scanned:,} records -> kept {len(rows):,}. \"\n        f\"Dropped: {dropped['rating']:,} bad rating, \"\n        f\"{dropped['empty']:,} too short, \"\n        f\"{dropped['duplicate']:,} duplicate.\"\n    )\n\n    return pd.DataFrame(rows)\n\ndef stratified_split(\n    df: pd.DataFrame,\n    seed: int = SEED,\n    val_fraction: float = VAL_FRACTION,\n    test_fraction: float = TEST_FRACTION,\n) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:\n    \"\"\"Split into train/val/test, preserving the class ratio in each part.\n\n    Stratification matters here because neutral is a small minority: a plain\n    random split could leave the validation set with a noticeably different\n    neutral share than the training set, making macro-F1 hard to interpret.\n    \"\"\"\n    holdout = val_fraction + test_fraction\n\n    train_df, rest_df = train_test_split(\n        df,\n        test_size=holdout,\n        stratify=df[\"label\"],\n        random_state=seed,\n    )\n    # Second cut divides the holdout between val and test in the right ratio.\n    test_df, val_df = train_test_split(\n        rest_df,\n        test_size=val_fraction / holdout,\n        stratify=rest_df[\"label\"],\n        random_state=seed,\n    )\n\n    return (\n        train_df.reset_index(drop=True),\n        val_df.reset_index(drop=True),\n        test_df.reset_index(drop=True),\n    )"
+    },
+    {
+      "title": "4.2 VOCABULARY, TOKENISATION AND GloVe EMBEDDINGS",
+      "file": "src/vocab.py",
+      "source": "def tokenize(text: str) -> list[str]:\n    \"\"\"Split cleaned text the way GloVe's own training data was split.\"\"\"\n    text = _CONTRACTION_RE.sub(r\" \\1\", text)\n    text = _PUNCT_RE.sub(r\" \\1 \", text)\n    return text.split()\n\ndef build_embedding_matrix(\n    vocab: Vocabulary,\n    glove_path: Path = GLOVE_PATH,\n    embed_dim: int = EMBED_DIM,\n    seed: int = 42,\n) -> np.ndarray:\n    \"\"\"Return a ``(len(vocab), embed_dim)`` matrix seeded with GloVe vectors.\n\n    Coverage is printed because it is a genuinely diagnostic number: if only half\n    the vocabulary has a pretrained vector, most of the benefit of using GloVe at\n    all has been lost (usually a sign the text cleaning is too aggressive).\n    \"\"\"\n    if not glove_path.exists():\n        raise FileNotFoundError(\n            f\"GloVe vectors not found at {glove_path}. \"\n            \"Run `python -m src.download_glove` first.\"\n        )\n\n    rng = np.random.default_rng(seed)\n    # Uniform(-0.25, 0.25) is the standard init for words GloVe does not cover;\n    # it matches the rough scale of real GloVe vectors.\n    matrix = rng.uniform(-0.25, 0.25, size=(len(vocab), embed_dim)).astype(np.float32)\n    matrix[PAD_ID] = 0.0   # padding must contribute nothing\n\n    wanted = set(vocab.stoi)\n    found = 0\n    with open(glove_path, \"r\", encoding=\"utf-8\") as fh:\n        for line in fh:\n            word, _, rest = line.partition(\" \")\n            if word not in wanted:\n                continue\n            matrix[vocab.stoi[word]] = np.fromstring(rest, sep=\" \", dtype=np.float32)\n            found += 1\n\n    pct = 100 * found / len(vocab)\n    print(f\"GloVe coverage: {found:,}/{len(vocab):,} tokens ({pct:.1f}%) \"\n          f\"have a pretrained vector\")\n    return matrix"
+    },
+    {
+      "title": "4.3 MODEL ARCHITECTURE - Bi-LSTM WITH ATTENTION",
+      "file": "src/models.py",
+      "source": "class AdditiveAttention(nn.Module):\n    \"\"\"Bahdanau-style additive attention over the encoder's per-token outputs.\n\n    score_t = v . tanh(W h_t)  ->  softmax over real tokens only.\n\n    Padding positions are masked to -inf *before* the softmax. Masking after it\n    would be wrong: the padded positions would already have taken probability\n    mass from the real tokens.\n    \"\"\"\n\n    def __init__(self, hidden_dim: int, attention_dim: int = 128) -> None:\n        super().__init__()\n        self.project = nn.Linear(hidden_dim, attention_dim)\n        self.score = nn.Linear(attention_dim, 1, bias=False)\n\n    def forward(self, outputs: torch.Tensor, mask: torch.Tensor):\n        # outputs (B, T, H); mask (B, T) with True on real tokens.\n        scores = self.score(torch.tanh(self.project(outputs))).squeeze(-1)  # (B, T)\n        scores = scores.masked_fill(~mask, torch.finfo(scores.dtype).min)\n        weights = torch.softmax(scores, dim=1)                              # (B, T)\n        context = torch.bmm(weights.unsqueeze(1), outputs).squeeze(1)       # (B, H)\n        return context, weights\n\nclass BiLSTMAttentionClassifier(_EmbeddingBase):\n    \"\"\"Main model: Bi-LSTM encoder + additive attention pooling.\n\n    ``forward`` returns ``(logits, attention_weights)``; the weights are what the\n    error analysis and the Streamlit app use to highlight influential words.\n    \"\"\"\n\n    def __init__(\n        self,\n        vocab_size: int,\n        embed_dim: int = 100,\n        hidden_dim: int = 128,\n        num_layers: int = 1,\n        attention_dim: int = 128,\n        dropout: float = 0.3,\n        embedding_matrix: np.ndarray | None = None,\n        freeze_embeddings: bool = False,\n    ) -> None:\n        super().__init__(vocab_size, embed_dim, embedding_matrix,\n                         freeze_embeddings, dropout)\n        self.lstm = nn.LSTM(\n            embed_dim, hidden_dim, num_layers=num_layers,\n            batch_first=True, bidirectional=True,\n            dropout=dropout if num_layers > 1 else 0.0,\n        )\n        self.attention = AdditiveAttention(hidden_dim * 2, attention_dim)\n        self.fc = nn.Linear(hidden_dim * 2, N_CLASSES)\n\n    def forward(self, x: torch.Tensor, lengths: torch.Tensor):\n        emb = self._embed(x)\n        packed = pack_padded_sequence(emb, lengths.cpu(), batch_first=True,\n                                      enforce_sorted=False)\n        packed_out, _ = self.lstm(packed)\n        outputs, _ = pad_packed_sequence(packed_out, batch_first=True)\n\n        mask = torch.arange(outputs.size(1), device=x.device)[None, :] \\\n            < lengths[:, None].to(x.device)\n        context, weights = self.attention(outputs, mask)\n        return self.fc(self.dropout(context)), weights"
+    },
+    {
+      "title": "4.4 TRAINING LOOP - CLASS WEIGHTS, EARLY STOPPING, MIXED PRECISION",
+      "file": "src/train.py",
+      "source": "def collate(batch):\n    \"\"\"Pad to the longest sequence *in this batch*, not to the global max.\n\n    Dynamic padding matters: most reviews are ~40 words, so padding everything to\n    200 would spend roughly four fifths of the compute on padding tokens.\n    \"\"\"\n    sequences, labels = zip(*batch)\n    lengths = torch.tensor([len(s) for s in sequences], dtype=torch.int64)\n    padded = torch.full((len(sequences), int(lengths.max())), PAD_ID,\n                        dtype=torch.int64)\n    for i, seq in enumerate(sequences):\n        padded[i, : len(seq)] = torch.from_numpy(seq)\n    return padded, lengths, torch.tensor(labels, dtype=torch.int64)\n\n@dataclass\nclass TrainConfig:\n    model: str = \"bilstm_attention\"\n    embed_dim: int = EMBED_DIM\n    hidden_dim: int = 128\n    num_layers: int = 1\n    attention_dim: int = 128\n    dropout: float = 0.3\n    max_len: int = MAX_LEN\n    batch_size: int = 128\n    lr: float = 1e-3\n    weight_decay: float = 1e-5\n    epochs: int = 8\n    patience: int = 2\n    grad_clip: float = 5.0\n    freeze_embeddings: bool = False\n    use_glove: bool = True\n    seed: int = SEED\n    # \"ce\" = plain cross-entropy; \"ordinal\" = distance-aware soft targets.\n    loss: str = \"ce\"\n    smoothing: float = 0.1\n    # Optional suffix so a capacity experiment does not overwrite the base run.\n    tag: str = \"\"\n\ndef train_model(cfg: TrainConfig) -> dict:\n    torch.manual_seed(cfg.seed)\n    np.random.seed(cfg.seed)\n\n    device = torch.device(\"cuda\" if torch.cuda.is_available() else \"cpu\")\n    display = DISPLAY_NAMES[cfg.model] + (f\" ({cfg.tag})\" if cfg.tag else \"\")\n    slug = cfg.model + (f\"_{cfg.tag}\" if cfg.tag else \"\")\n    print(f\"\\n{'=' * 68}\\nTraining {display} on {device}\\n{'=' * 68}\")\n\n    train_df, val_df, test_df = load_splits()\n\n    # Vocabulary is built from training text only (see src/vocab.py).\n    vocab = Vocabulary.build(train_df[\"text_clean\"])\n    embedding_matrix = (\n        build_embedding_matrix(vocab, embed_dim=cfg.embed_dim)\n        if cfg.use_glove else None\n    )\n\n    loaders = {}\n    for name, frame, shuffle in (\n        (\"train\", train_df, True),\n        (\"val\", val_df, False),\n        (\"test\", test_df, False),\n    ):\n        ds = ReviewDataset(frame[\"text_clean\"], frame[\"label\"], vocab, cfg.max_len)\n        loaders[name] = DataLoader(\n            ds, batch_size=cfg.batch_size, shuffle=shuffle,\n            collate_fn=collate, num_workers=0, pin_memory=device.type == \"cuda\",\n        )\n\n    model = build_model(\n        cfg.model,\n        vocab_size=len(vocab),\n        embed_dim=cfg.embed_dim,\n        hidden_dim=cfg.hidden_dim,\n        num_layers=cfg.num_layers,\n        dropout=cfg.dropout,\n        embedding_matrix=embedding_matrix,\n        freeze_embeddings=cfg.freeze_embeddings,\n        **({\"attention_dim\": cfg.attention_dim}\n           if cfg.model == \"bilstm_attention\" else {}),\n    ).to(device)\n    print(f\"trainable parameters: {count_parameters(model):,}\")\n\n    # Inverse-frequency class weights: a neutral mistake must cost more than a\n    # positive one, or the model simply learns the prior.\n    classes = np.array([0, 1, 2])\n    weights = compute_class_weight(\"balanced\", classes=classes,\n                                   y=train_df[\"label\"].values)\n    print(\"class weights: \" + \", \".join(\n        f\"{n}={w:.2f}\" for n, w in zip((\"negative\", \"neutral\", \"positive\"), weights)))\n    criterion = build_criterion(\n        cfg, torch.tensor(weights, dtype=torch.float32, device=device)\n    ).to(device)\n\n    optimiser = torch.optim.AdamW(model.parameters(), lr=cfg.lr,\n                                  weight_decay=cfg.weight_decay)\n    scaler = torch.amp.GradScaler(\"cuda\", enabled=device.type == \"cuda\")\n\n    MODELS_DIR.mkdir(parents=True, exist_ok=True)\n    checkpoint_path = MODELS_DIR / f\"{slug}.pt\"\n    vocab.save(MODELS_DIR / f\"{slug}_vocab.json\")\n\n    best_f1, best_epoch, epochs_without_gain = -1.0, -1, 0\n    history: list[dict] = []\n\n    for epoch in range(1, cfg.epochs + 1):\n        model.train()\n        running, seen, start = 0.0, 0, time.perf_counter()\n\n        for step, (x, lengths, y) in enumerate(loaders[\"train\"], 1):\n            x = x.to(device, non_blocking=True)\n            y = y.to(device, non_blocking=True)\n            lengths = lengths.to(device)\n\n            optimiser.zero_grad(set_to_none=True)\n            with torch.autocast(\"cuda\", dtype=torch.float16,\n                                enabled=device.type == \"cuda\"):\n                logits, _ = model(x, lengths)\n                loss = criterion(logits, y)\n\n            scaler.scale(loss).backward()\n            # Unscale before clipping, or the clip threshold applies to scaled\n            # gradients and does nothing predictable.\n            scaler.unscale_(optimiser)\n            nn.utils.clip_grad_norm_(model.parameters(), cfg.grad_clip)\n            scaler.step(optimiser)\n            scaler.update()\n\n            running += loss.item() * len(y)\n            seen += len(y)\n            if step % 400 == 0:\n                print(f\"  epoch {epoch} step {step}/{len(loaders['train'])} \"\n                      f\"loss {running / seen:.4f}\")\n\n        y_true, y_pred, _ = evaluate(model, loaders[\"val\"], device)\n        val = compute_metrics(y_true, y_pred)\n        elapsed = time.perf_counter() - start\n        print(f\"epoch {epoch:>2} | train loss {running / seen:.4f} | \"\n              f\"val macro-F1 {val['macro_f1']:.4f} | \"\n              f\"val acc {val['accuracy']:.4f} | {elapsed:.0f}s\")\n        history.append({\"epoch\": epoch, \"train_loss\": running / seen,\n                        \"val_macro_f1\": val[\"macro_f1\"],\n                        \"val_accuracy\": val[\"accuracy\"]})\n\n        if val[\"macro_f1\"] > best_f1:\n            best_f1, best_epoch, epochs_without_gain = val[\"macro_f1\"], epoch, 0\n            torch.save(\n                {\n                    \"model_state\": model.state_dict(),\n                    \"config\": asdict(cfg),\n                    \"vocab_size\": len(vocab),\n                    \"epoch\": epoch,\n                    \"val_macro_f1\": best_f1,\n                },\n                checkpoint_path,\n            )\n            print(f\"         new best - checkpoint saved ({checkpoint_path.name})\")\n        else:\n            epochs_without_gain += 1\n            if epochs_without_gain >= cfg.patience:\n                print(f\"early stopping: no improvement for {cfg.patience} epochs\")\n                break\n\n    # Restore the best weights before touching the test split.\n    model.load_state_dict(torch.load(checkpoint_path)[\"model_state\"])\n    print(f\"\\nbest epoch {best_epoch} (val macro-F1 {best_f1:.4f})\")\n\n    val_true, val_pred, _ = evaluate(model, loaders[\"val\"], device)\n    val_metrics = compute_metrics(val_true, val_pred)\n    print_report(display, \"val\", val_metrics)\n    record_result(display, \"val\", val_metrics, extra={\n        \"parameters\": count_parameters(model),\n        \"best_epoch\": best_epoch,\n        \"history\": history,\n        \"config\": asdict(cfg),\n    })\n\n    test_true, test_pred, _ = evaluate(model, loaders[\"test\"], device)\n    test_metrics = compute_metrics(test_true, test_pred)\n    print_report(display, \"test\", test_metrics)\n    record_result(display, \"test\", test_metrics)\n\n    return test_metrics"
+    },
+    {
+      "title": "4.5 BASELINE - TF-IDF + LOGISTIC REGRESSION",
+      "file": "src/baseline.py",
+      "source": "def build_pipeline(C: float) -> Pipeline:\n    \"\"\"TF-IDF features into a class-weighted multinomial logistic regression.\"\"\"\n    return Pipeline(\n        [\n            (\n                \"tfidf\",\n                TfidfVectorizer(\n                    ngram_range=NGRAM_RANGE,\n                    min_df=MIN_DF,\n                    max_features=MAX_FEATURES,\n                    sublinear_tf=True,   # damps the effect of very repetitive text\n                    strip_accents=\"unicode\",\n                ),\n            ),\n            (\n                \"clf\",\n                LogisticRegression(\n                    C=C,\n                    # Without this the model would learn to answer \"positive\"\n                    # almost always - 79% of the data says so.\n                    class_weight=\"balanced\",\n                    max_iter=1000,\n                    random_state=SEED,\n                    n_jobs=-1,\n                ),\n            ),\n        ]\n    )"
+    },
+    {
+      "title": "4.6 INFERENCE AND THE STREAMLIT WEB APPLICATION",
+      "file": "src/predict.py",
+      "source": "class SentimentPredictor:\n    \"\"\"Loads a trained checkpoint and predicts sentiment for raw review text.\"\"\"\n\n    def __init__(\n        self,\n        model_key: str = \"bilstm_attention\",\n        device: str | None = None,\n    ) -> None:\n        checkpoint_path = MODELS_DIR / f\"{model_key}.pt\"\n        vocab_path = MODELS_DIR / f\"{model_key}_vocab.json\"\n        if not checkpoint_path.exists():\n            raise FileNotFoundError(\n                f\"No trained model at {checkpoint_path}. \"\n                f\"Train one first:  python -m src.train --model {model_key}\"\n            )\n\n        self.model_key = model_key\n        self.display_name = DISPLAY_NAMES.get(model_key, model_key)\n        self.device = torch.device(\n            device or (\"cuda\" if torch.cuda.is_available() else \"cpu\")\n        )\n\n        checkpoint = torch.load(checkpoint_path, map_location=self.device)\n        cfg = checkpoint[\"config\"]\n        self.max_len: int = cfg.get(\"max_len\", MAX_LEN)\n        self.vocab = Vocabulary.load(vocab_path)\n\n        extra = ({\"attention_dim\": cfg[\"attention_dim\"]}\n                 if model_key == \"bilstm_attention\" else {})\n        self.model = build_model(\n            model_key,\n            vocab_size=checkpoint[\"vocab_size\"],\n            embed_dim=cfg[\"embed_dim\"],\n            hidden_dim=cfg[\"hidden_dim\"],\n            num_layers=cfg[\"num_layers\"],\n            dropout=cfg[\"dropout\"],\n            embedding_matrix=None,   # weights come from the checkpoint\n            **extra,\n        ).to(self.device)\n        self.model.load_state_dict(checkpoint[\"model_state\"])\n        self.model.eval()\n        self.val_macro_f1: float = checkpoint.get(\"val_macro_f1\", float(\"nan\"))\n\n    @torch.no_grad()\n    def predict(self, text: str) -> Prediction:\n        \"\"\"Predict sentiment for one raw review.\"\"\"\n        # Exactly the training-time cleaning - see module docstring.\n        normalised = normalise_text(None, text)\n        cleaned = clean_for_neural(normalised)\n        if not cleaned:\n            raise ValueError(\"no usable text after cleaning\")\n\n        # Same tokenizer as training, so the displayed tokens line up 1:1 with\n        # the attention weights the model produced.\n        tokens = tokenize(cleaned)[: self.max_len]\n        ids = self.vocab.encode(cleaned, self.max_len)\n        x = torch.tensor([ids], dtype=torch.long, device=self.device)\n        lengths = torch.tensor([len(ids)], dtype=torch.int64)\n\n        logits, attention = self.model(x, lengths)\n        probs = torch.softmax(logits.float(), dim=1)[0].cpu().numpy()\n        label = int(probs.argmax())\n\n        weights: list[float] = []\n        if attention is not None:\n            weights = attention[0, : len(tokens)].float().cpu().numpy().tolist()\n\n        return Prediction(\n            label=label,\n            label_name=CLASS_NAMES[label],\n            confidence=float(probs[label]),\n            probabilities={n: float(p) for n, p in zip(CLASS_NAMES, probs)},\n            tokens=tokens,\n            attention=weights,\n        )"
+    }
+  ],
+  "figures": {
+    "block_diagram": "D:\\Academic\\Projects\\Deep Learing Project\\amazon-sentiment-lstm\\results\\figures\\00_block_diagram.png",
+    "class_distribution": "D:\\Academic\\Projects\\Deep Learing Project\\amazon-sentiment-lstm\\results\\figures\\01_class_distribution.png",
+    "rating_distribution": "D:\\Academic\\Projects\\Deep Learing Project\\amazon-sentiment-lstm\\results\\figures\\02_rating_distribution.png",
+    "review_length": "D:\\Academic\\Projects\\Deep Learing Project\\amazon-sentiment-lstm\\results\\figures\\03_review_length.png",
+    "top_words": "D:\\Academic\\Projects\\Deep Learing Project\\amazon-sentiment-lstm\\results\\figures\\04_top_words_per_class.png",
+    "model_comparison": "D:\\Academic\\Projects\\Deep Learing Project\\amazon-sentiment-lstm\\results\\figures\\06_model_comparison.png",
+    "per_class_f1": "D:\\Academic\\Projects\\Deep Learing Project\\amazon-sentiment-lstm\\results\\figures\\07_per_class_f1.png",
+    "confusion_main": "D:\\Academic\\Projects\\Deep Learing Project\\amazon-sentiment-lstm\\results\\figures\\08_confusion_matrix_main.png",
+    "attention": "D:\\Academic\\Projects\\Deep Learing Project\\amazon-sentiment-lstm\\results\\figures\\09_attention_heatmaps.png",
+    "app_mixed": "D:\\Academic\\Projects\\Deep Learing Project\\amazon-sentiment-lstm\\results\\figures\\10_app_mixed_review.png",
+    "app_negative": "D:\\Academic\\Projects\\Deep Learing Project\\amazon-sentiment-lstm\\results\\figures\\11_app_negative_review.png"
+  },
+  "test_cases": [
+    {
+      "title": "TEST CASE 1 - CLEAR NEGATIVE REVIEW",
+      "description": "The customer describes an outright product failure with no redeeming comment. The model should identify the negative sentiment with high confidence and attend to the explicit failure words rather than to neutral product nouns.",
+      "text": "Battery died after two weeks and support never replied. Complete waste of money.",
+      "predicted": "negative",
+      "confidence": 0.9865,
+      "probabilities": {
+        "negative": 0.9865,
+        "neutral": 0.0127,
+        "positive": 0.0008
+      },
+      "top_tokens": [
+        [
+          "waste",
+          0.488
+        ],
+        [
+          "died",
+          0.234
+        ],
+        [
+          "complete",
+          0.116
+        ],
+        [
+          "weeks",
+          0.046
+        ],
+        [
+          "never",
+          0.042
+        ],
+        [
+          "support",
+          0.02
+        ]
+      ]
+    },
+    {
+      "title": "TEST CASE 2 - CLEAR POSITIVE REVIEW",
+      "description": "The customer reports that the product met expectations exactly. The model should return positive with high confidence, weighting the satisfaction terms.",
+      "text": "Works exactly as described, sound quality is excellent and setup took two minutes.",
+      "predicted": "positive",
+      "confidence": 0.9965,
+      "probabilities": {
+        "negative": 0.0001,
+        "neutral": 0.0034,
+        "positive": 0.9965
+      },
+      "top_tokens": [
+        [
+          "exactly",
+          0.228
+        ],
+        [
+          "works",
+          0.201
+        ],
+        [
+          "described",
+          0.145
+        ],
+        [
+          "excellent",
+          0.126
+        ],
+        [
+          "as",
+          0.113
+        ],
+        [
+          "quality",
+          0.056
+        ]
+      ]
+    },
+    {
+      "title": "TEST CASE 3 - MIXED REVIEW (CONTRAST DETECTION)",
+      "description": "The review contains genuine praise followed by a genuine complaint, joined by a contrastive conjunction. This is the case a bag-of-words model cannot resolve, because the sentiment depends on the structure of the sentence rather than on which words appear in it. The attention layer is expected to weight the pivot word most heavily and the model to return neutral.",
+      "text": "The picture quality is genuinely sharp and setup took five minutes, but the remote feels cheap and the menus are painfully slow.",
+      "predicted": "neutral",
+      "confidence": 0.7879,
+      "probabilities": {
+        "negative": 0.1506,
+        "neutral": 0.7879,
+        "positive": 0.0615
+      },
+      "top_tokens": [
+        [
+          "but",
+          0.606
+        ],
+        [
+          "slow",
+          0.099
+        ],
+        [
+          "picture",
+          0.049
+        ],
+        [
+          "quality",
+          0.042
+        ],
+        [
+          "genuinely",
+          0.038
+        ],
+        [
+          "the",
+          0.028
+        ]
+      ]
+    }
+  ]
+}
