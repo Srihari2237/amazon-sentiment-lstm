@@ -1,0 +1,68 @@
+{
+  "dataset": "McAuley-Lab/Amazon-Reviews-2023 / Electronics",
+  "n_rows_requested": 300000,
+  "seed": 42,
+  "label_scheme": {
+    "negative": "1-2 stars",
+    "neutral": "3 stars",
+    "positive": "4-5 stars"
+  },
+  "distribution": {
+    "full sample": {
+      "negative": {
+        "count": 40748,
+        "percent": 13.58
+      },
+      "neutral": {
+        "count": 21841,
+        "percent": 7.28
+      },
+      "positive": {
+        "count": 237411,
+        "percent": 79.14
+      }
+    },
+    "train": {
+      "negative": {
+        "count": 32598,
+        "percent": 13.58
+      },
+      "neutral": {
+        "count": 17473,
+        "percent": 7.28
+      },
+      "positive": {
+        "count": 189929,
+        "percent": 79.14
+      }
+    },
+    "val": {
+      "negative": {
+        "count": 4075,
+        "percent": 13.58
+      },
+      "neutral": {
+        "count": 2184,
+        "percent": 7.28
+      },
+      "positive": {
+        "count": 23741,
+        "percent": 79.14
+      }
+    },
+    "test": {
+      "negative": {
+        "count": 4075,
+        "percent": 13.58
+      },
+      "neutral": {
+        "count": 2184,
+        "percent": 7.28
+      },
+      "positive": {
+        "count": 23741,
+        "percent": 79.14
+      }
+    }
+  }
+}
