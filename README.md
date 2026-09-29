@@ -155,6 +155,21 @@ python -m src.predict            # terminal
 streamlit run app/app.py         # browser UI
 ```
 
+![Streamlit app, mixed review](results/figures/10_app_mixed_review.png)
+
+The screenshot above is the most informative case in the whole project. Given
+*"The picture quality is genuinely sharp and setup took five minutes, **but** the
+remote feels cheap and the menus are painfully slow"*, the model answers
+**neutral (78.8%)** - and the word it weights most heavily is **`but` at 0.606**,
+six times the next token.
+
+Nothing told the model that "but" matters. It has no sentiment of its own, and a
+bag-of-words model can only treat it as a common stopword. The attention layer
+learned that it is the *pivot* where a review turns, which is exactly the
+mechanism the EDA predicted would be needed for the neutral class.
+
+![Streamlit app, negative review](results/figures/11_app_negative_review.png)
+
 ```
 review > the screen is gorgeous but the battery barely lasts a day
 
@@ -265,6 +280,22 @@ from a change that touched no architecture at all.
 so `src/data.py` streams it from the Hub and samples 300,000 rows through a
 seeded 100,000-row shuffle buffer rather than downloading it or taking the top of
 the file. The sample is cached locally, so only the first run pays the cost.
+
+## What I'd do next
+
+In order of expected return, from the [error analysis](results/error_analysis.md):
+
+1. **Ordinal loss.** Confusing neutral with positive is a smaller mistake than
+   confusing negative with positive, but cross-entropy treats them identically.
+   An ordinal formulation targets the exact cell that produces 46% of all errors.
+2. **Tune the decision threshold on validation** instead of taking `argmax`.
+   Neutral sits at precision 0.376 / recall 0.659 - a lopsided operating point
+   that the class weight chose bluntly.
+3. **Give DistilBERT a fair run** - full 240k training set at `max_len` 230 - to
+   find out what the real transformer ceiling is here.
+4. **Accept the label ceiling.** Roughly half the confident neutral errors have
+   text that contradicts the star rating. That is fixed with better labels, not a
+   better architecture.
 
 ## License
 
