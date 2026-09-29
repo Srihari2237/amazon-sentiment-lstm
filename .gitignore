@@ -1,0 +1,44 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# ---- Virtual environments ----
+venv/
+.venv/
+env/
+
+# ---- Data (streamed / generated, never committed) ----
+data/
+
+# ---- Model weights & artifacts ----
+*.pt
+*.pth
+*.ckpt
+*.pkl
+*.joblib
+*.parquet
+
+# ---- Pretrained embeddings (downloaded, large) ----
+glove*
+*.zip
+*.gz
+
+# ---- Hugging Face / Streamlit caches ----
+.cache/
+.streamlit/secrets.toml
+
+# ---- Notebooks ----
+.ipynb_checkpoints/
+
+# ---- Editors / OS ----
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ---- Secrets ----
+.env
+
+# NOTE: results/ IS tracked on purpose - metrics and plots are part of the portfolio.
