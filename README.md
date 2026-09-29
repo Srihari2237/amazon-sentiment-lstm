@@ -1,24 +1,44 @@
 # Customer Review Sentiment Analysis Using LSTM for Online Shopping
 
-3-class sentiment classification (negative / neutral / positive) on the
+Three-class sentiment classification (negative / neutral / positive) on 300,000
 [Amazon Reviews 2023](https://huggingface.co/datasets/McAuley-Lab/Amazon-Reviews-2023)
-Electronics category, comparing a classical baseline, three recurrent
-architectures, and a fine-tuned transformer on identical data splits.
+Electronics reviews, comparing a classical baseline, three recurrent
+architectures and a fine-tuned transformer **on identical data splits**.
 
-> **Status:** Phase 1 complete (data pipeline). Modelling phases in progress -
-> this README is expanded with the results table, plots and screenshots as they land.
+The project's real subject is the **neutral class**. It is only 7.3% of the data,
+it sits semantically between the other two, and every model here finds it hard.
+Accuracy hides that completely - so macro-F1 is the headline metric throughout.
+
+<!-- RESULTS_TABLE -->
+
+## Why accuracy is the wrong metric
+
+79.14% of these reviews are positive. A model that ignores its input and answers
+"positive" every time scores:
+
+| Metric | Always-positive |
+|---|---|
+| Accuracy | **0.7914** |
+| Macro-F1 | **0.2945** |
+
+An 0.79 accuracy sounds respectable and is worthless. Macro-F1 averages the three
+classes equally, so the 7% neutral class counts as much as the 79% positive one,
+and a model cannot hide behind the majority.
 
 ## Labels
 
-| Stars | Class    | Code |
-|-------|----------|------|
-| 1-2   | negative | 0    |
-| 3     | neutral  | 1    |
-| 4-5   | positive | 2    |
+| Stars | Class | Code | Share of data |
+|---|---|---|---|
+| 1-2 | negative | 0 | 13.58% |
+| 3 | neutral | 1 | 7.28% |
+| 4-5 | positive | 2 | 79.14% |
 
 ## Setup
 
 ```bash
+git clone <this-repo>
+cd amazon-sentiment-lstm
+
 python -m venv venv
 venv\Scripts\activate                 # Windows;  source venv/bin/activate on Linux/macOS
 
@@ -32,7 +52,7 @@ PyTorch is installed separately, because the CUDA build does not come from PyPI
 pip install torch --index-url https://download.pytorch.org/whl/cu124 --resume-retries 10
 ```
 
-The wheel is ~2.5 GB. If the download keeps dropping, grab it with a download
+The wheel is ~2.5 GB. If the download keeps dropping, fetch it with a download
 manager and install from the file instead:
 
 ```
@@ -44,52 +64,156 @@ pip install "C:\path\to\torch-2.6.0+cu124-cp312-cp312-win_amd64.whl"
 python -c "import torch; print(torch.__version__, torch.cuda.is_available())"
 ```
 
-Only `torch` is needed - `torchvision` and `torchaudio` are not used by this
-project. **Phase 1 (the data pipeline) does not require torch at all**, so you
-can build the dataset before PyTorch is installed.
+Only `torch` is needed - `torchvision` and `torchaudio` are unused.
 
-## Build the dataset
+> **Windows Smart App Control.** If an import fails with
+> `ImportError: DLL load failed ... An Application Control policy has blocked this file`,
+> Windows is refusing to load compiled extensions that lack an established
+> reputation. The pinned versions in `requirements.txt` are chosen to avoid this.
+> Do not "fix" it by disabling Smart App Control - that is a one-way switch that
+> can only be re-enabled by resetting Windows.
+
+## Reproducing the results
+
+Run in order. Every step is seeded with 42.
 
 ```bash
-python -m src.data --smoke --n-rows 2000   # ~1 min sanity check
-python -m src.data                         # full 300k sample + splits
+python -m src.data                                  # 1. stream + split the dataset  (~10 min)
+jupyter nbconvert --execute notebooks/01_eda.ipynb  # 2. exploratory analysis
+python -m src.baseline                              # 3. TF-IDF + Logistic Regression (~4 min)
+python -m src.download_glove                        # 4. GloVe vectors (822 MB, resumable)
+python -m src.train --model bilstm_attention        #    main model                   (~12 min)
+python -m src.train --model lstm                    # 5. other architectures
+python -m src.train --model bigru
+python -m src.train_distilbert --train-subset 60000 #    transformer upper bound
+python -m src.compare                               #    comparison table + charts
+python -m src.error_analysis                        # 6. confusion matrix + attention
 ```
 
-The Electronics file is 22.6 GB, so it is streamed from the Hub rather than
-downloaded. The sampled rows are cached to `data/raw/`, and the stratified
-80/10/10 splits are written to `data/processed/`. Both are gitignored.
+Timings are for an RTX 4050 Laptop (6 GB) with mixed precision.
 
 ## Interactive demo
 
-Type in your own review and get a live prediction with class probabilities and
-the words the attention layer focused on:
+Type your own review and get a live prediction with class probabilities and the
+words the attention layer weighted:
 
 ```bash
-python -m src.predict            # interactive terminal mode
+python -m src.predict            # terminal
 streamlit run app/app.py         # browser UI
 ```
 
-Both reuse the exact cleaning functions from `src/data.py`, so a review typed by
-hand is preprocessed identically to the training data.
+```
+review > the screen is gorgeous but the battery barely lasts a day
+
+  NEUTRAL (61.2% confident)
+
+    negative  ########....................  14.9%
+    neutral   #################...........  61.2%
+    positive  #######.....................  23.9%
+
+    words the model focused on:
+      but (0.29)  barely (0.18)  gorgeous (0.11)  battery (0.08)
+```
+
+Both paths reuse `normalise_text`, `clean_for_neural` and `tokenize` from the
+training code. If inference cleaned text even slightly differently from training,
+the model would silently lose accuracy with no error message.
+
+## How it works
+
+```
+raw review text
+   |
+   |-- normalise_text()    HTML unescaped, tags and URLs stripped, whitespace collapsed
+   |                       -> kept for DistilBERT (its tokenizer wants natural text)
+   |
+   |-- clean_for_neural()  lowercased, repeated characters collapsed
+   |-- tokenize()          Penn-style: punctuation split off, contractions split
+   |                       -> used by TF-IDF and the recurrent models
+   v
+ token ids -> GloVe embeddings (100d) -> Bi-LSTM -> attention -> 3 class probabilities
+```
+
+### The main model
+
+A bidirectional LSTM reads the review in both directions, then an **additive
+attention layer** scores every token and produces a weighted summary, instead of
+relying only on the final hidden state.
+
+Two reasons that matters:
+
+1. **Accuracy.** The final hidden state forces a whole review through one vector
+   at the last timestep, so evidence early in a long review has to survive to the
+   end. Attention can look back at any position.
+2. **Interpretability.** The attention weights are readable, which is what powers
+   the word highlighting in the demo and the heatmaps in the error analysis.
+
+Padding is masked to `-inf` *before* the softmax. Masking afterwards would be a
+subtle bug: padded positions would already have taken probability mass from real
+tokens.
 
 ## Project structure
 
 ```
-src/         data.py (pipeline), models.py, train.py, evaluate.py, predict.py
-notebooks/   exploratory analysis
-app/         Streamlit demo
-results/     metrics, plots, comparison tables (tracked in git)
-data/        streamed sample and splits (gitignored)
+src/
+  data.py             stream, label, clean and split the dataset
+  vocab.py            vocabulary + GloVe embedding matrix + tokenizer
+  models.py           LSTM, Bi-GRU, Bi-LSTM+attention
+  train.py            shared training loop (class weights, early stopping, fp16)
+  train_distilbert.py transformer fine-tuning
+  baseline.py         TF-IDF + Logistic Regression
+  metrics.py          one definition of every reported number
+  compare.py          comparison table and charts
+  error_analysis.py   confusion matrix, failure cases, attention heatmaps
+  predict.py          interactive inference (CLI + shared by the app)
+  viz.py              shared plot style and palette
+  download_glove.py   fetch pretrained vectors
+notebooks/01_eda.ipynb
+app/app.py            Streamlit demo
+results/              metrics, comparison tables, figures  (tracked)
+data/                 dataset and embeddings               (gitignored)
+models/               trained checkpoints                  (gitignored)
 ```
 
-## Models
+## Methodology notes
 
-1. TF-IDF + Logistic Regression (baseline)
-2. Plain LSTM
-3. Bi-GRU
-4. Bi-LSTM + attention with pretrained GloVe embeddings (main model)
-5. Fine-tuned DistilBERT (upper bound)
+These are the decisions that make the numbers trustworthy:
 
-All models are trained with class-weighted loss and reported with macro-F1,
-per-class precision/recall/F1 and a confusion matrix - accuracy alone is
-misleading on this distribution. Seed is fixed at 42 throughout.
+- **The test split is scored once**, after every hyperparameter choice is locked
+  in on validation. The baseline's `C` and every model's stopping epoch are
+  selected on validation only.
+- **Splits are stratified** and identical for all five models: 240,000 / 30,000 /
+  30,000 with the class ratio held to 13.58 / 7.28 / 79.14 in each.
+- **Duplicates are removed before splitting.** 13,887 duplicate reviews appeared
+  while collecting 300k rows; had they been split across train and test, every
+  score would be inflated.
+- **EDA uses the training split only.** Plotting validation or test data would
+  leak into choices made from those plots (vocabulary size, `max_len`, weights).
+- **The vocabulary is built from training text only**, for the same reason.
+- **Class-weighted loss** everywhere (negative 2.45, neutral 4.58, positive 0.42).
+
+### A bug worth documenting
+
+The first Bi-LSTM run scored 0.7218 macro-F1 - statistically tied with a
+bag-of-words baseline, which was suspicious for a 4.7M-parameter model with
+pretrained embeddings. GloVe coverage turned out to be only **45.6%**, and 87.2%
+of the misses were punctuation glued to words: splitting on whitespace produced
+`great.`, `good.` and `don't` as single tokens, none of which exist in GloVe, so
+the most sentiment-bearing words were being mapped to `<unk>` and given random
+vectors.
+
+GloVe was trained on Penn-tokenised text. Matching that tokenisation raised
+coverage to **73.1%** and the main model to **0.7435** - a gain of +0.022 macro-F1
+from a change that touched no architecture at all.
+
+## Dataset
+
+`McAuley-Lab/Amazon-Reviews-2023`, Electronics category. The raw file is 22.6 GB,
+so `src/data.py` streams it from the Hub and samples 300,000 rows through a
+seeded 100,000-row shuffle buffer rather than downloading it or taking the top of
+the file. The sample is cached locally, so only the first run pays the cost.
+
+## License
+
+Released for educational and portfolio use. The dataset is subject to its own
+terms - see the [dataset card](https://huggingface.co/datasets/McAuley-Lab/Amazon-Reviews-2023).
