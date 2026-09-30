@@ -51,3 +51,9 @@ results/probabilities/
 
 # ---- Node (only used to generate the report .docx) ----
 node_modules/
+
+# ---- Office temp/lock files and local report drafts ----
+~$*
+~WRL*.tmp
+/Front Page.docx
+/Report.docx
